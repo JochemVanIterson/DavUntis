@@ -9,6 +9,7 @@
 
   require_once($ini_array["BasePath"]."scripts/untis_curl.php");
   require_once($ini_array["BasePath"]."scripts/untis_login.php");
+  require_once($ini_array["BasePath"]."scripts/untis_data.php");
 
   $SQL = new SQL($ini_array);
 
@@ -20,6 +21,14 @@
     $LoginDone = $UntisLogin->Login($data['school'], $data['username'], $data['password']);
     die(json_encode($LoginDone));
   }
+  if($_POST['action']=='untis_departments'){
+    if($_POST['fresh']=='true'){
+      $UntisData = new UntisData($_COOKIE, $ini_array);
+      $data = $UntisData->Departments();
+      echo json_encode($data, true);
+      die;
+    }
+  }
 
   // ---------------------------------------------------------------- ADMIN ---------------------------------------------------------------- //
   if($_POST['action']=='admin_login'){ // ------------------------------------- Login ------------------------------------- //
@@ -30,7 +39,6 @@
     	if(!isset($_POST['user']) || $_POST['user']==""){
     		if($ErrorState["message"]!="")$ErrorState["message"].=", ";
     		$ErrorState["message"].="User Empty";
-    		//$ErrorState["message"].="User Empty, ".json_encode($_POST, true);
     	}
     	if(!isset($_POST['pw']) || $_POST['pw']==""){
     		if($ErrorState["message"]!="")$ErrorState["message"].=", ";

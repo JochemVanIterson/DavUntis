@@ -8,8 +8,20 @@ function RoosterListPage(parent){
   self.show = function(){
     console.log("show RoosterList");
     self.parent.append(self.view);
+    self.getData();
+
   }
   self.unbind = function(){
     console.log("unbind RoosterList");
+  }
+
+  self.getData = function(){
+    $.post('scripts/actions.php',{
+      action: 'untis_departments',
+      fresh: true
+    },function(data, status){
+      console.log("ajax", `data ${data}, status ${status}`);
+      $('.page_roosterlist_container').text(data);
+    });
   }
 }
