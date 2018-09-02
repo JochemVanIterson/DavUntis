@@ -1,0 +1,2 @@
+# DavUntis
+Maak met de data van WebUntis je eigen persoonlijke roosters. Deze roosters zijn te gebruiken als een calender subscription in Apple iCal, Google Calender en andere caldav clients.
