@@ -1,13 +1,15 @@
 <?php
 class UntisData{
   public $JSESSIONID = "";
+  public $UntisURL = "";
 	private $schoolname = "";
 	private $UntisCurl;
 
-	function __construct($COOKIE, $ini_array){
-		$this->UntisCurl = new UntisCurl($COOKIE, $ini_array);
+	function __construct($UntisURL, $COOKIE, $ini_array){
+		$this->UntisCurl = new UntisCurl($UntisURL, $COOKIE, $ini_array);
 		if(isset($COOKIE["JSESSIONID"]))$this->JSESSIONID = $COOKIE["JSESSIONID"];
 		if(isset($COOKIE["schoolname"]))$this->schoolname = $COOKIE["schoolname"];
+    $this->UntisURL = $UntisURL;
 	}
 
   function PageConfig($typeID){

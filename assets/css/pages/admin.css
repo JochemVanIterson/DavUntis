@@ -171,7 +171,7 @@
 	padding-left: 10px !important;
 }
 
-/* ---------------------------------------- Empty array view ---------------------------------------- */
+/* ---------------------------------------- Empty array view --------------------------------------- */
 .empty_view {
 	height: calc(100% - 50px);
 	display: flex;
@@ -183,7 +183,15 @@
 
 /* ---------------------------------------- Admin page Dash ---------------------------------------- */
 
-/* ---------------------------------------- Admin page Users ---------------------------------------- */
+/* ---------------------------------------- Admin page Users --------------------------------------- */
+.admin_page_users>.actions{
+ 	background-color: #fff;
+ 	width: calc(100% - 10px);
+ 	height: 40px;
+ 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+ 	padding-left: 10px;
+ }
+
 .UserForm{
 	width: 100%;
 	border-collapse: collapse;
@@ -220,6 +228,48 @@
 }
 .admin {
 	border-left: 8px solid var(--Accent);
+}
+
+/* ---------------------------------------- Admin page Untis --------------------------------------- */
+.untis_settings_holder{
+	background-color: #fff;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.untis_settings_holder>#title{
+	font-size: x-large;
+	padding: 12px 10px;
+}
+#untis_setup_table{
+	width: 100%;
+	border-collapse: collapse;
+}
+#untis_setup_table td{
+	text-decoration: none;
+	font-size: 16px;
+	border: 1px solid #ddd;
+	height: 42px;
+}
+#untis_setup_table td:nth-child(1){
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #eee;
+	width: 50px;
+}
+#untis_setup_table input{
+	padding: 0px;
+	padding-left: 10px;
+	height: 42px;
+	font-size: 14px;
+	width: calc(100% - 10px);
+	border-width: 0px;
+}
+#untis_setup_table #actions>td{
+	padding: 0px;
+	background-color: #fff;
+}
+#untis_setup_table .saveButton{
+	float: right;
 }
 
 /* ---------------------------------------- Smaller Screens ---------------------------------------- */

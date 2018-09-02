@@ -13,17 +13,20 @@
 
   $SQL = new SQL($ini_array);
 
+  $UntisURL = $SQL->getSetting('untis_url');
+  $UntisSchool = $SQL->getSetting('untis_school');
+
   // ---------------------------------------------------------------- UNTIS ---------------------------------------------------------------- //
   if($_POST['action']=='untis_login'){
     $data = $_POST['data'];
-		$UntisLogin = new UntisLogin($_COOKIE, $ini_array);
+		$UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
 		if(!isset($_COOKIE['JSESSIONID']))$UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : "hku");
     $LoginDone = $UntisLogin->Login($data['school'], $data['username'], $data['password']);
     die(json_encode($LoginDone));
   }
   if($_POST['action']=='untis_departments'){
     if($_POST['fresh']=='true'){
-      $UntisData = new UntisData($_COOKIE, $ini_array);
+      $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
       $data = $UntisData->Departments();
       echo json_encode($data, true);
       die;
@@ -80,11 +83,17 @@
       $UserData = $SQL->getUsers(true);
       die(json_encode(array("page"=>$_POST['page'], "data"=>$UserData)));
     }
+    if($_POST['page']=='Untis'){ // -------------------------- Untis -------------------------- //
+      $UntisData = array();
+      $UntisData['untis_url'] = $SQL->getSetting('untis_url');
+      $UntisData['untis_school'] = $SQL->getSetting('untis_school');
+      die(json_encode(array("page"=>$_POST['page'], "data"=>$UntisData)));
+    }
     die(json_encode(array("error"=>"page doesn't exist"), true));
   }
 
   // ---------------------------------------------------------------- SQL Actions ---------------------------------------------------------- //
-  if($_POST['action']=='user'){ // -------------------------- Users --------------------------- //
+  if($_POST['action']=='user'){ // -------------------------------------------- Users ------------------------------------- //
     if($_POST['sql_action']=='insert'){
       $response = $SQL->addUser($_POST['fields']);
     }
@@ -96,7 +105,35 @@
     }
     die(json_encode($response));
   }
+  if($_POST['action']=='untis'){ // -------------------------------------------- Untis ------------------------------------- //
+    if($_POST['sql_action']=='insert'){
+      $response = $SQL->addSetting($_POST['fields']);
+    }
+    if($_POST['sql_action']=='remove'){
+      $response = $SQL->removeSetting($_POST['key']);
+    }
+    if($_POST['sql_action']=='update'){
+      // ----------------------------------- untis_url ----------------------------------- //
+      if($SQL->getSetting('untis_url')==null){
+        $response = $SQL->addSetting(array("key"=>"untis_url", "value"=>$_POST['fields']['untis_url']));
+      } else {
+        $response = $SQL->updateSetting(array("key"=>"untis_url", "value"=>$_POST['fields']['untis_url']));
+      }
+      if($response['status']!="success"){
+         die(json_encode($response));
+      }
 
-
+      // ----------------------------------- untis_school ----------------------------------- //
+      if($SQL->getSetting('untis_school')==null){
+        $response = $SQL->addSetting(array("key"=>"untis_school", "value"=>$_POST['fields']['untis_school']));
+      } else {
+        $response = $SQL->updateSetting(array("key"=>"untis_school", "value"=>$_POST['fields']['untis_school']));
+      }
+      if($response['status']!="success"){
+         die(json_encode($response));
+      }
+    }
+    die(json_encode($response));
+  }
   die(json_encode(array("error"=>"action doesn't exist", "meh"=>$_POST), true));
 ?>

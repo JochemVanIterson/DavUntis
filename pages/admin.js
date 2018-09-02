@@ -11,7 +11,7 @@ function AdminPage(parent){
     		</div>
     		<table class='admin_selectors_table'>
           <tr class='admin_selector_itm Selected' id='Dash'>
-            <td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_dash.svg' alt='Users'></td>
+            <td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_dash.svg' alt='Dash'></td>
             <td class='selector_text'>
               Dashboard
             </td>
@@ -20,6 +20,12 @@ function AdminPage(parent){
     				<td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_users.svg' alt='Users'></td>
     				<td class='selector_text'>
     					Users
+    				</td>
+    			</tr>
+          <tr class='admin_selector_itm' id='Untis'>
+    				<td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_untis.svg' alt='Untis'></td>
+    				<td class='selector_text'>
+    					Untis
     				</td>
     			</tr>
           <tr class='admin_selector_itm' id='System'>
@@ -91,6 +97,9 @@ function AdminPage(parent){
         break;
       case 'Users':
         pageView = self.pageUsers(sortmode);
+        break;
+      case 'Untis':
+        pageView = self.pageUntis();
         break;
       case 'System':
         pageView = self.pageSystem();
@@ -244,6 +253,21 @@ function AdminPage(parent){
       		$(this).closest('.list_element').find('.content').slideToggle("fast");
       	});
       }
+      if(response.page=="Untis"){ // ---------------------------------------------- PageData Untis ---------------------------------------------- //
+        console.log('pagedata', response.data);
+        if(response.data.untis_url!=null){
+          $('#untis_url').val(response.data.untis_url);
+        } else {
+          $('#untis_url').attr('placeholder', 'empty');
+        }
+
+        if(response.data.untis_school!=null){
+          $('#untis_school').val(response.data.untis_school);
+        } else {
+          $('#untis_school').attr('placeholder', 'empty');
+        }
+        console.log(response.data);
+      }
     });
   }
   self.unbind = function(){
@@ -352,6 +376,49 @@ function AdminPage(parent){
       });
     });
     view.append(itmAdd);
+    return view;
+  }
+  self.pageUntis = function(){ // -------------------------------------------------- Page Untis ---------------------------------------------- //
+    view = $(`<div class='admin_page_untis'>
+      <div class='untis_settings_holder'>
+        <div id='title'>Untis setup</div>
+        <table id='untis_setup_table'>
+          <tr>
+            <td>Server url</td>
+            <td><input id='untis_url'></td>
+          </tr>
+          <tr>
+            <td>Schoolname</td>
+            <td><input id='untis_school'></td>
+          </tr>
+          <tr id='actions'>
+            <td colspan=2>
+              <button id='saveUntisSetup' class='saveButton'>Save</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>`);
+    view.find('#saveUntisSetup').click(function(){
+      $.post('scripts/actions.php',{
+        action: 'untis',
+        sql_action: 'update',
+        fields: {
+          untis_url: view.find('input#untis_url').val(),
+          untis_school: view.find('input#untis_school').val(),
+        }
+      },
+      function(data, status){
+        data = JSON.parse(data);
+        console.log("saveUntisSetup", data);
+        if(data.status=='success'){
+          SuccessDialog = new Dialog('UpdateUntis', true, `Settings saved`, function(){
+            self.show('Untis');
+          });
+          SuccessDialog.show();
+        }
+      });
+    });
     return view;
   }
   self.pageSystem = function(){ // ------------------------------------------------ Page System ------------------------------------------------- //

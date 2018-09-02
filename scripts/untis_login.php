@@ -1,13 +1,13 @@
 <?php
-// require_once($ini_array['BasePath']."scripts/untis_curl.php");
-
 class UntisLogin{
 	public $JSESSIONID = "";
+	private $UntisURL = "";
 	private $schoolname = "";
 	private $UntisCurl;
 
-	function __construct($COOKIE, $ini_array){
-		$this->UntisCurl = new UntisCurl($COOKIE, $ini_array);
+	function __construct($UntisURL, $COOKIE, $ini_array){
+		$this->UntisURL = $UntisURL;
+		$this->UntisCurl = new UntisCurl($UntisURL, $COOKIE, $ini_array);
 		if(isset($COOKIE["JSESSIONID"]))$this->JSESSIONID = $COOKIE["JSESSIONID"];
 		if(isset($COOKIE["schoolname"]))$this->schoolname = $COOKIE["schoolname"];
 	}

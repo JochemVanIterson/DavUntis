@@ -148,6 +148,50 @@ class SQL {
 		return $UserData;
 	}
 
+	function addSetting($post_data){ // -------------------------- Add ----------------------------- //
+		$key = $post_data['key'];
+		$value = $post_data['value'];
+		$prefixSettings = $this->ini_array['msql_prefix']."Settings";
+		$sql_Insert_Settings = "INSERT INTO $prefixSettings (setting_key, setting_value) VALUES ('$key', '$value');";
+
+		if (!mysqli_query($this->connection, $sql_Insert_Settings)) {
+			return array("status"=>"failed", "query"=>$sql_Insert_Settings, "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function updateSetting($post_data){ // ----------------------- Update -------------------------- //
+		$key = $post_data['key'];
+		$value = $post_data['value'];
+		$prefixSettings = $this->ini_array['msql_prefix']."Settings";
+		$sql_update_setting = "UPDATE $prefixSettings SET setting_value='$value' WHERE setting_key='$key';";
+
+		if (!mysqli_query($this->connection, $sql_update_setting)) {
+			return array("status"=>"failed", "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function removeSetting($key){
+		$prefixSettings = $this->ini_array['msql_prefix']."Settings";
+		$sql_remove_setting = "DELETE FROM $prefixSettings WHERE key='$key'";
+		if (!mysqli_query($this->connection, $sql_remove_setting)) {
+			return array("status"=>"failed", "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function getSetting($key){
+		$prefixSettings = $this->ini_array['msql_prefix']."Settings";
+		$sqlq_GetSetting = "SELECT * from $prefixSettings WHERE setting_key='$key' LIMIT 1";
+		$sql_GetSetting = mysqli_query($this->connection, $sqlq_GetSetting);
+		if(mysqli_num_rows($sql_GetSetting) == 0){
+			return null;
+		}
+		$SettingData = mysqli_fetch_array($sql_GetSetting, MYSQLI_ASSOC);
+		return $SettingData['setting_value'];
+	}
+
 	// ------------------------------------------------------------------------ Helpers ---------------------------------------------------------------------- //
 	function randomString($length) {
 		$str = "";
