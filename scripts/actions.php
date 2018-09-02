@@ -20,8 +20,8 @@
   if($_POST['action']=='untis_login'){
     $data = $_POST['data'];
 		$UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
-		if(!isset($_COOKIE['JSESSIONID']))$UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : "hku");
-    $LoginDone = $UntisLogin->Login($data['school'], $data['username'], $data['password']);
+		if(!isset($_COOKIE['JSESSIONID']))$UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
+    $LoginDone = $UntisLogin->Login($UntisSchool, $data['username'], $data['password']);
     die(json_encode($LoginDone));
   }
   if($_POST['action']=='untis_departments'){

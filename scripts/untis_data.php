@@ -7,22 +7,22 @@ class UntisData{
 
 	function __construct($UntisURL, $COOKIE, $ini_array){
 		$this->UntisCurl = new UntisCurl($UntisURL, $COOKIE, $ini_array);
+    $this->UntisURL = $UntisURL;
 		if(isset($COOKIE["JSESSIONID"]))$this->JSESSIONID = $COOKIE["JSESSIONID"];
 		if(isset($COOKIE["schoolname"]))$this->schoolname = $COOKIE["schoolname"];
-    $this->UntisURL = $UntisURL;
 	}
 
   function PageConfig($typeID){
 		$SessionIDHeader = array(
-			'Host: mese.webuntis.com',
-			'Referer: https://mese.webuntis.com/WebUntis/index.do;jsessionid='.$this->JSESSIONID,
+			'Host: '.$this->UntisURL,
+			'Referer: https://'.$this->UntisURL.'/WebUntis/index.do;jsessionid='.$this->JSESSIONID,
 			'Accept: application/json',
 			'Content-Type: application/x-www-form-urlencoded',
 			'X-Requested-With: XMLHttpRequest',
 			'DNT:1',
 			'Cookie: schoolname='.$this->schoolname.'; JSESSIONID='.$this->JSESSIONID
 		);
-		$CurlResponse = $this->UntisCurl->GetDataCurl("api/public/timetable/weekly/pageconfig?type=".$typeID, $SessionIDHeader, "");
+		$CurlResponse = $this->UntisCurl->GetDataCurl("/WebUntis/api/public/timetable/weekly/pageconfig?type=".$typeID, $SessionIDHeader, "");
 		return json_decode($CurlResponse['response'], true);
 	}
 

@@ -61,7 +61,6 @@ function LoginPage(parent){
     var data = {
       username: username,
       password: password,
-      school: 'hku'
     };
     $.post('scripts/actions.php',{
       action: 'untis_login',
