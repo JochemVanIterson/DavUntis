@@ -1,0 +1,764 @@
+.admin_view {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction:  row;
+}
+.admin_selectors {
+	width: 300px;
+	min-width: 300px;
+	border-top: 1px solid white;
+	overflow-y: auto;
+	background-color: var(--Primary);
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	border-collapse: collapse;
+	transition: width .2s;
+	min-height: calc(100% - 50px);
+}
+.admin_selectors_table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.admin_selectors_table td {
+	/* background-color: var(--Primary); */
+	border: none;
+}
+.admin_selector_dd {
+	border-bottom: 1px solid white;
+  cursor:pointer;
+	display: none;
+	padding: 16px 10px;
+	text-decoration: none;
+  font-size: 18px;
+  color: white;
+}
+.admin_selector_dd:hover {
+	background-color: var(--PrimaryDark);
+}
+.admin_selector_itm {
+	height: 54px;
+	border-bottom: 1px solid white;
+	text-decoration: none;
+  font-size: 18px;
+  color: white;
+	cursor:pointer;
+}
+.selector_text{
+	padding: 16px 0px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+.admin_selector_itm:hover {
+	background-color: var(--PrimaryLight);
+}
+.admin_selector_itm.Selected {
+	background-color: var(--PrimaryDark);
+}
+.admin_selector_sub {
+	height: 40px;
+	display: none;
+	border-bottom: 1px solid white;
+	text-decoration: none;
+  font-size: 16px;
+  color: white;
+  cursor:pointer;
+}
+.admin_selector_sub:hover {
+	background-color: var(--PrimaryLight);
+}
+.admin_selector_sub.Selected {
+	display: block;
+	background-color: var(--PrimaryDark);
+}
+.admin_selector_sub > .selector_text{
+	padding: 10px 0px;
+}
+.selector_icon {
+	width: 30px;
+	height: 30px;
+	padding: 0px 12px;
+}
+.admin_page {
+	height: 100%;
+	overflow-y: auto;
+	align-self: stretch;
+	flex-grow: 1;
+}
+
+/* ---------------------------------------- List Data ---------------------------------------- */
+.list_element {
+	background-color: #fff;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+}
+.list_element:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.list_element > .header {
+	border-bottom: 1px solid #ddd;
+	padding: 12px 10px;
+	text-decoration: none;
+  font-size: 18px;
+  cursor:pointer;
+}
+.list_element > .content {
+	display: none;
+	text-decoration: none;
+  font-size: 16px;
+}
+
+/* ---------------------------------------- Field Data ---------------------------------------- */
+.FieldTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+.FieldTable tr,.FieldTable td {
+	background-color: white;
+}
+
+/* ---------------------------------------- Buttons ---------------------------------------- */
+.removeButton {
+	background: var(--Accent);
+}
+.removeButton:hover {
+	background: var(--AccentDark);
+}
+.saveButton {
+	background: var(--AccentCustom);
+}
+.saveButton:hover {
+	background: var(--AccentDarkCustom);
+}
+.backButton {
+	background: var(--AccentCustom);
+	float:left;
+}
+.backButton:hover {
+	background: var(--AccentDarkCustom);
+}
+.editButton {
+	background: var(--AccentCustom);
+	float:left;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+.editButton:hover {
+	background: var(--AccentDarkCustom);
+}
+.addFieldButton {
+	background: var(--Accent);
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.addFieldButton:hover {
+	background: var(--AccentDark);
+}
+.removeFieldButton {
+	width: 40px;
+	background: var(--Accent);
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.removeFieldButton:hover {
+	background: var(--AccentDark);
+}
+.emptyField > td {
+	padding-left: 10px !important;
+}
+
+/* ---------------------------------------- Empty array view ---------------------------------------- */
+.empty_view {
+	height: calc(100% - 50px);
+	display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 32px;
+}
+
+/* ---------------------------------------- Admin page Dash ---------------------------------------- */
+
+
+/* ---------------------------------------- Admin page Groups ---------------------------------------- */
+.GroupForm{
+	width: 100%;
+	border-collapse: collapse;
+}
+.GroupForm td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.GroupForm td:last-child{
+	background-color: #fff;
+}
+.GroupForm tr,.GroupForm td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  height: 42px;
+  vertical-align: true;
+}
+.GroupForm td > input {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: calc(100% - 10px);
+	border: none;
+}
+.GroupForm td > input[type=file] {
+	align-items: center;
+	text-align: center !important;
+}
+
+/* ---------------------------------------- Admin page Children ---------------------------------------- */
+.ChildForm{
+	width: 100%;
+	border-collapse: collapse;
+}
+.ChildForm td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.ChildForm td:last-child{
+	background-color: #fff;
+}
+.ChildForm tr,.ChildForm td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  height: 42px;
+  vertical-align: true;
+}
+.ChildForm td > input {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: calc(100% - 10px);
+	border: none;
+}
+.ChildForm td > input[type=file] {
+	align-items: center;
+	text-align: center !important;
+}
+
+.actions{
+	background-color: #fff;
+	width: calc(100% - 10px);
+	height: 40px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	padding-left: 10px;
+}
+
+.bind_nfc_button {
+	background: var(--AccentCustom);
+	cursor: pointer;
+}
+.bind_nfc_button:hover {
+	background: var(--AccentDarkCustom);
+}
+.bind_nfc_icon{
+	display: block;
+	height: 192px;
+	width: 192px;
+	margin: 0 auto;
+	padding: 20px;
+	pointer-events: none;
+}
+.bind_nfc_message{
+	width: 100%;
+	padding: 10px 0;
+	text-align:center
+}
+
+/* ---------------------------------------- Admin page Credits ---------------------------------------- */
+.admin_page_credits{
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+/* ------------- From ------------- */
+.credits_from_container{
+	display: flex;
+	flex-direction: column;
+	overflow:hidden;
+	background-color: #fff;
+	width: 50%;
+	margin: 20px;
+	border-radius: 5px;
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.credits_from_header{
+	text-align: center;
+	font-weight: bold;
+	padding: 5px;
+	font-size: 18px;
+}
+.credits_from_actions{
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	background-color: #fff;
+	width: calc(100% - 10px);
+	height: 40px;
+	border-bottom: solid 1px #ccc;
+	padding-left: 10px;
+}
+.credits_from_content{
+	display: flex;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+.credits_from_list{
+	border-collapse: collapse;
+	width: 100%;
+}
+.credits_from_list_itm{
+	border-bottom: 1px solid #ddd;
+	text-decoration: none;
+	font-size: 18px;
+	cursor: pointer;
+}
+.credits_from_list_itm:hover{
+	background-color: #eee;
+}
+.credits_from_list_itm.itm_selected{
+	background-color: #ddd;
+}
+.credits_from_list_itm > td:nth-child(1){
+	width: 8px;
+}
+.credits_from_list_itm > td:nth-child(2){
+	padding: 12px 10px;
+}
+.credits_from_list_itm > td:nth-child(3){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.credits_from_bank{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	align-items: center;
+}
+.credits_from_bank_icon{
+	padding-top: 30px;
+	padding-bottom: 30px;
+	width: 50%;
+}
+
+/* ------------- Amount ------------- */
+.credits_amount_container{
+	display: flex;
+	justify-content: center;
+  align-items: center;
+}
+.credits_amount_box{
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+	padding: 20px;
+}
+.credits_amount_header{
+	width: 100%;
+	text-align: center;
+}
+#credits_amount_input{
+	width: 150px;
+}
+#credits_commit_button{
+	width: 100%;
+	background: var(--AccentCustom);
+}
+#credits_commit_button.disabled{
+	background: buttonface;
+}
+#credits_commit_button.disabled:hover{
+	background: buttonface;
+}
+#credits_commit_button:hover{
+	width: 100%;
+	background: var(--AccentDarkCustom);
+}
+
+/* ------------- Receiver ------------- */
+.credits_receiver_container{
+	display: flex;
+	flex-direction: column;
+	overflow:hidden;
+	background-color: #fff;
+	width: 50%;
+	margin: 20px;
+	border-radius: 5px;
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.credits_receiver_header{
+	text-align: center;
+	font-weight: bold;
+	padding: 5px;
+	font-size: 18px;
+}
+.credits_receiver_actions{
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	background-color: #fff;
+	width: calc(100% - 10px);
+	height: 40px;
+	border-bottom: solid 1px #ccc;
+	padding-left: 10px;
+}
+.credits_receiver_content{
+	display: flex;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+.credits_receiver_list{
+	border-collapse: collapse;
+	width: 100%;
+}
+.credits_receiver_list_itm{
+	border-bottom: 1px solid #ddd;
+	text-decoration: none;
+	font-size: 18px;
+	cursor: pointer;
+}
+.credits_receiver_list_itm:hover{
+	background-color: #eee;
+}
+.credits_receiver_list_itm.itm_selected{
+	background-color: #ddd;
+}
+.credits_receiver_list_itm > td:nth-child(1){
+	width: 8px;
+}
+.credits_receiver_list_itm > td:nth-child(2){
+	padding: 12px 10px;
+}
+.credits_receiver_list_itm > td:nth-child(3){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.credits_receiver_bank{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	align-items: center;
+}
+.credits_receiver_bank_icon{
+	padding-top: 30px;
+	padding-bottom: 30px;
+	width: 50%;
+}
+
+@media only screen and (max-width: 1000px) {
+	.admin_page_credits{
+		flex-direction: column;
+		height: unset;
+	}
+	.credits_from_container{
+		width: calc(100% - 40px);
+		order: 2;
+	}
+
+	.credits_amount_container{
+		order: 1;
+		margin-top: 20px;
+	}
+
+	.credits_receiver_container{
+		width: calc(100% - 40px);
+		order: 3;
+	}
+}
+
+/* -------------------------- Commit Dialog -------------------------- */
+/* ------------- Actions ------------- */
+.commit_creds_actions{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding: 5px;
+}
+
+/* before_after_chooser */
+.before_after_chooser{
+	display: flex;
+	flex-direction: row;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	overflow: hidden;
+}
+.before_after_chooser>*{
+	padding: 3px;
+	margin: 0;
+}
+.before_after_chooser>*:hover{
+	background-color: #ddd;
+}
+.before_after_chooser>*:active{
+	background-color: #bbb;
+}
+.before_after_chooser>.selected{
+	background-color: #333;
+	color: white;
+}
+.before_after_chooser>.selected:hover{
+	background-color: #333;
+}
+
+/* divide_chooser */
+.divide_chooser{
+	display: flex;
+	flex-direction: row;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	overflow: hidden;
+	margin-left: 10px;
+}
+.divide_chooser>*{
+	padding: 3px;
+	margin: 0;
+}
+.divide_chooser>*:hover{
+	background-color: #ddd;
+}
+.divide_chooser>*:active{
+	background-color: #bbb;
+}
+.divide_chooser>.selected{
+	background-color: #333;
+	color: white;
+}
+.divide_chooser>.selected:hover{
+	background-color: #333;
+}
+
+/* ------------- List ------------- */
+.commit_creds_list{
+	display: flex;
+	flex-direction: row;
+	border: 1px solid #ccc;
+	max-height: 400px;
+	overflow-y: auto;
+}
+.commit_creds_headers{
+	display: flex;
+	flex-direction: row;
+}
+.commit_creds_headers>*{
+	width: 50%;
+	text-align: center;
+	font-weight: bold;
+	padding: 5px;
+	font-size: 18px;
+}
+
+/* ------------- From ------------- */
+.commit_creds_list_from{
+	width: 50%;
+	border-right: 1px solid #ccc;
+	max-height: 400px;
+	overflow-y: auto;
+	border-collapse: collapse;
+}
+.commit_creds_list_from_itm{
+	border-bottom: 1px solid #ddd;
+	text-decoration: none;
+	font-size: 18px;
+}
+.commit_creds_list_from_itm.itm_selected{
+	background-color: #ddd;
+}
+.commit_creds_list_from_itm > td:nth-child(1){
+	width: 8px;
+}
+.commit_creds_list_from_itm > td:nth-child(2){
+	padding: 12px 10px;
+}
+.commit_creds_list_from_itm > td:nth-child(3){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.commit_creds_list_from_itm > td:nth-child(4){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.commit_creds_list_from_itm > td:nth-child(5){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+
+/* ------------- Receiver ------------- */
+.commit_creds_list_receiver{
+	width: 50%;
+	max-height: 400px;
+	overflow-y: auto;
+	border-collapse: collapse;
+}
+.commit_creds_list_receiver_itm{
+	border-bottom: 1px solid #ddd;
+	text-decoration: none;
+	font-size: 18px;
+}
+.commit_creds_list_receiver_itm.itm_selected{
+	background-color: #ddd;
+}
+.commit_creds_list_receiver_itm > td:nth-child(1){
+	width: 8px;
+}
+.commit_creds_list_receiver_itm > td:nth-child(2){
+	padding: 12px 10px;
+}
+.commit_creds_list_receiver_itm > td:nth-child(3){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.commit_creds_list_receiver_itm > td:nth-child(4){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+.commit_creds_list_receiver_itm > td:nth-child(5){
+	padding: 12px 10px;
+	width: 1px;
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 600px) {
+	.commit_creds_list{
+		flex-direction: column;
+	}
+	.commit_creds_list_from{
+		width: 100%;
+	}
+	.commit_creds_list_receiver{
+		border-top: 2px solid black;
+		width: 100%;
+	}
+}
+
+/* ---------------------------------------- Admin page Users ---------------------------------------- */
+.UserForm{
+	width: 100%;
+	border-collapse: collapse;
+}
+.UserForm td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.UserForm td:last-child{
+	background-color: #fff;
+}
+
+.UserForm tr,.UserForm td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  height: 42px;
+  vertical-align: true;
+}
+.UserForm td > input {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: calc(100% - 10px);
+	border: none;
+}
+.UserForm td > input[type=file] {
+	align-items: center;
+	text-align: center !important;
+}
+.admin {
+	border-left: 8px solid var(--Accent);
+}
+
+/* ---------------------------------------- Smaller Screens ---------------------------------------- */
+@media only screen and (max-width: 1200px){
+	.selector_text {
+		display:none;
+	}
+	.admin_selectors {
+		position: absolute;
+		height: calc(100% - 50px);
+		width: 54px;
+		min-width: unset;
+		z-index: 500;
+	}
+	.admin_selectors:hover {
+		width: 200px;
+		box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.5);
+	}
+	.admin_page {
+		margin-left: 50px;
+	}
+	.admin_selector_itm {
+		height: 54px;
+		width: 54px;
+	}
+	.admin_selector_sub {
+		height: 40px;
+		width: 54px;
+	}
+	.selector_icon object {
+		height: 30px;
+		width: 30px;
+	}
+}
+
+/* ---------------------------------------- Mobile layout ---------------------------------------- */
+@media only screen and (max-width: 500px) {
+	.admin_page {
+		margin-left: unset;
+	}
+  .admin_view {
+  	flex-direction:  column;
+  }
+  .admin_selectors {
+		position: relative;
+		height: unset;
+		min-height: unset;
+  	width: 100%;
+  }
+	.admin_selectors:hover {
+  	width: unset;
+		box-shadow: unset;
+  }
+  .admin_selector_dd {
+		display: block;
+	}
+	.admin_selectors_table{
+		display: none;
+	}
+	.selector_text {
+		display: block;
+	}
+	.list_element {
+    margin: 10px 0px;
+  }
+}

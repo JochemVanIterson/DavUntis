@@ -1,0 +1,265 @@
+body, html{
+	margin:0;
+	padding:0;
+	background-color: #EEE;
+}
+
+/* Page settings */
+.admin_view {
+	width: 100%;
+	height: calc(100% - 50px);
+	display: flex;
+	flex-direction:  row;
+	overflow-y: scroll;
+}
+
+.admin_selectors {
+	width: 300px;
+	min-width: 300px;
+	border-top: 1px solid white;
+	background-color: var(--Primary);
+	align-self: stretch;
+	display: flex;
+	flex-direction: column;
+	border-collapse: collapse;
+	transition: width .2s;
+	min-height: calc(100% - 50px);
+}
+
+.admin_selectors_table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.admin_selectors_table td {
+	/* background-color: var(--Primary); */
+	border: none;
+}
+
+.admin_selector_dd {
+	border-bottom: 1px solid white;
+  cursor:pointer;
+	display: none;
+	padding: 16px 10px;
+	text-decoration: none;
+  font-size: 18px;
+  color: white;
+}
+.admin_selector_dd:hover {
+	background-color: var(--PrimaryDark);
+}
+
+.admin_selector_itm {
+	height: 54px;
+	border-bottom: 1px solid white;
+	text-decoration: none;
+  font-size: 18px;
+  color: white;
+	cursor:pointer;
+}
+.selector_text{
+	padding: 16px 0px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+}
+.admin_selector_itm:hover {
+	background-color: var(--PrimaryLight);
+}
+.admin_selector_itm.Selected {
+	background-color: var(--PrimaryDark);
+}
+
+.admin_selector_sub {
+	height: 40px;
+	display: none;
+	border-bottom: 1px solid white;
+	text-decoration: none;
+  font-size: 16px;
+  color: white;
+  cursor:pointer;
+}
+.admin_selector_sub:hover {
+	background-color: var(--PrimaryLight);
+}
+.admin_selector_sub.Selected {
+	display: block;
+	background-color: var(--PrimaryDark);
+}
+
+.admin_selector_sub > .selector_text{
+	padding: 10px 0px;
+}
+
+.selector_icon {
+	width: 30px;
+	height: 30px;
+	padding: 0px 12px;
+}
+
+.admin_page {
+	align-self: stretch;
+	flex-grow: 1;
+}
+
+/* List Data */
+.list_element {
+	background-color: #fff;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+}
+
+.list_element:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.list_element > .header {
+	border-bottom: 1px solid #ddd;
+	padding: 12px 10px;
+	text-decoration: none;
+    font-size: 18px;
+    cursor:pointer;
+}
+.list_element > .content {
+	display: none;
+	text-decoration: none;
+    font-size: 16px;
+}
+
+/* Field Data */
+.FieldTable {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.FieldTable tr,.FieldTable td {
+	background-color: white;
+}
+
+/* Buttons */
+.removeButton {
+	background: var(--Accent);
+}
+.removeButton:hover {
+	background: var(--AccentDark);
+}
+.saveButton {
+	background: var(--AccentCustom);
+}
+.saveButton:hover {
+	background: var(--AccentDarkCustom);
+}
+.backButton {
+	background: var(--AccentCustom);
+	float:left;
+}
+.backButton:hover {
+	background: var(--AccentDarkCustom);
+}
+.editButton {
+	background: var(--AccentCustom);
+	float:left;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+.editButton:hover {
+	background: var(--AccentDarkCustom);
+}
+
+.addFieldButton {
+	background: var(--Accent);
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.addFieldButton:hover {
+	background: var(--AccentDark);
+}
+
+.removeFieldButton {
+	width: 40px;
+	background: var(--Accent);
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.removeFieldButton:hover {
+	background: var(--AccentDark);
+}
+
+.emptyField > td {
+	padding-left: 10px !important;
+}
+
+/* Empty array view */
+.empty_view {
+	height: calc(100% - 50px);
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 32px;
+}
+
+@media only screen and (max-width: 1200px){
+	.selector_text {
+		display:none;
+	}
+	.admin_selectors {
+		position: absolute;
+		height: calc(100% - 50px);
+		width: 54px;
+		min-width: unset;
+		z-index: 10000;
+	}
+	.admin_selectors:hover {
+		width: 200px;
+		box-shadow: 0 16px 16px 0 rgba(0, 0, 0, 0.5);
+	}
+	.admin_page {
+		margin-left: 50px;
+	}
+	.admin_selector_itm {
+		height: 54px;
+		width: 54px;
+	}
+	.admin_selector_sub {
+		height: 40px;
+		width: 54px;
+	}
+	.selector_icon object {
+		height: 30px;
+		width: 30px;
+	}
+}
+
+/* Mobile layout */
+@media only screen and (max-width: 500px) {
+	.admin_page {
+		margin-left: unset;
+	}
+  .admin_view {
+  	flex-direction:  column;
+  }
+  .admin_selectors {
+		position: relative;
+		height: unset;
+  	width: 100%;
+  }
+	.admin_selectors:hover {
+  	width: unset;
+		box-shadow: unset;
+  }
+  .admin_selector_dd {
+		display: block;
+	}
+	.admin_selectors_table{
+		display: none;
+	}
+	.selector_text {
+		display: block;
+	}
+	.list_element {
+    margin: 10px 0px;
+  }
+}

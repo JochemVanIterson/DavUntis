@@ -1,0 +1,83 @@
+.login_page_container{
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-image:url(../../img/LoginBGImage.jpg);
+  background-position: center;
+  background-attachment: fixed;
+  background-size:cover;
+}
+
+.login_container{
+	width: 400px;
+	padding: 8% 0 0;
+	margin: auto;
+}
+@media only screen and (max-height: 550px) {
+  .login_container {
+	   padding: 20px 0 0;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .login_container {
+	   width: 100%;
+  }
+}
+.login_icon{
+	display: block;
+	height: 84px;
+	width: 84px;
+	margin: 0 auto 25px;
+	padding: 0;
+	pointer-events: none;
+}
+.login_box{
+  border-radius: 8px;
+  overflow: hidden;
+	margin-top: 20px;
+	margin-left: 0;
+	padding: 26px 24px 26px;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+	color: #72777c;
+	line-height: 1.5;
+	font-weight: 400;
+}
+.login_container input[type=text], .login_container input[type=password]{
+	border: 1px solid #ddd;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
+	color: #32373c;
+	outline: 0;
+	font-size: 24px;
+	width: 100%;
+	padding: 3px;
+	margin: 2px 6px 16px 0;
+	background: #fbfbfb;
+}
+#login_button{
+	float: right;
+	background-color: var(--Accent);
+  border: none;
+  border-radius: 2px;
+  color: white;
+  padding: 10px 24px;
+  text-align: center;
+  text-decoration: none;
+  /* font-size: 12px; */
+  /* height: 32px; */
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+#login_button:hover {
+    background-color: var(--AccentLight);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+    color: white;
+}
+#login_button:active {
+    background-color: var(--AccentDark);
+}
+.error_view{
+	float: left;
+	display: none;
+	color: red;
+}

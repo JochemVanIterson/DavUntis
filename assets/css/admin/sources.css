@@ -1,0 +1,43 @@
+/* Item Data */
+.SourceForm{
+	width: 100%;
+	border-collapse: collapse;
+}
+.SourceForm td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.SourceForm td:last-child{
+	background-color: #fff;
+}
+
+.SourceForm tr,.SourceForm td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    height: 42px;
+    vertical-align: true;
+}
+.SourceForm td > input {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: 100%;
+	border: none;
+}
+.SourceForm td > input[type=file] {
+	align-items: center;
+	text-align: center !important;
+}
+
+.admin {
+	border-left: 8px solid var(--Accent);
+}
+
+.SourceFormOption{
+	display:none;
+}

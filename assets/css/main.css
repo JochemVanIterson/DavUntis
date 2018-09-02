@@ -1,0 +1,150 @@
+/* Main setup */
+body, html{
+	margin:0;
+	padding:0;
+	background-color: #EEE;
+  width:  100%;
+  height: 100%;
+  font-family: sans-serif;
+}
+
+.page_container{
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.content_view{
+  width: 100%;
+	height: calc(100% - 50px);
+}
+
+@media only screen and (max-width: 700px) {
+    .content_view {
+			margin: 0px;
+    }
+}
+
+/* navigation bar */
+.navbar {
+	width: 100%;
+	height: 50px;
+	margin: 0px;
+	background: var(--PrimaryDark);
+	color: #FFFFFF;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-shrink: 0;
+}
+
+.navContent {
+	flex: 1;
+	overflow: hidden;
+}
+
+#home_icon{
+	cursor: pointer;
+}
+
+#UserText {
+	font-size: 18px;
+	padding: 16px 5px;
+	float: left;
+}
+
+.navItem {
+	background: var(--PrimaryDark);
+  border: none;
+  color: white;
+  padding: 16px 30px;
+  margin:0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+}
+
+.navItem>.selected {
+	background: var(--PrimaryLight);
+}
+
+.navItem:hover {
+	background: var(--Primary);
+}
+
+.navItem:active {
+	background: var(--PrimaryLight);
+}
+
+#logoutButton {
+  float: right;
+}
+
+#openAdmin {
+	float: left;
+}
+
+.navContent .app_icon{
+	display: block;
+  color: white;
+	height: 40px;
+	width: 40px;
+	margin: 5px 5px;
+	padding: 0;
+	float: left;
+}
+
+@media only screen and (max-width: 500px) {
+  .navItem {
+  	padding: 16px 5px;
+  }
+  #UserText {
+  	display: none;
+  }
+  #logoutButton {
+  	padding: 16px 15px;
+  }
+}
+
+/* Error page */
+.full_screen_error{
+	display: block;
+	height: calc(100% - 50px);
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 32px;
+
+}
+
+/* UI */
+.Button {
+	background: var(--Accent);
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  margin:0px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.Button:hover {
+	background: var(--AccentDark);
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}

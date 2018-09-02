@@ -1,0 +1,113 @@
+/* Item Data */
+.TableCommenData {
+	width: calc(100% - 20px);
+	border-collapse: collapse;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.TableCommenDataHeader {
+	vertical-align: center;
+	font-size: 34px;
+	padding: 15px;
+}
+
+.TableCommenData td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.TableCommenData td:last-child{
+	background-color: #fff;
+}
+
+.TableCommenData tr,td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    height: 42px;
+    vertical-align: true;
+}
+.TableCommenData td>input,td>textarea {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: calc(100% - 10px);
+	border: none;
+}
+.TableCommenData td>textarea {
+	resize: vertical;
+	min-height: 100px;
+}
+.TableCommenData td>div>input[type=file] {
+	padding: 0px;
+	margin: 0px;
+	background: #f7f7f7;
+	align-self: stretch;
+	width: 100%;
+	flex-grow: 1;
+}
+
+.ListFiles {
+	background-color: #fff;
+	width: calc(100% - 20px);
+	border-collapse: collapse;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ListFilesElement{
+	background-color: #fff;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+    font-size: 16px;
+    border-top: 1px solid #ddd;
+    height: 42px;
+    vertical-align: true;
+}
+
+.ListFilesHeader {
+	vertical-align: center;
+	font-size: 24px;
+	height: 50px;
+	line-height: 50px;
+	padding-left:10px;
+}
+
+.sortToggle {
+	background: var(--AccentCustom);
+	float:right;
+	height: 50px;
+	padding: 10 25;
+}
+.sortToggle:hover {
+	background: var(--AccentDark);
+}
+
+.Enabled {
+	background: var(--Accent);
+}
+.Enabled:hover {
+	background: var(--AccentDarkCustom);
+}
+
+
+.SaveRow {
+	width: calc(100% - 20px);
+	border-collapse: collapse;
+	margin: 10px;
+	padding: 0px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	background-color: #fff;
+}
+
+svg {
+	height: 100%;
+	background: #f7f7f7;
+	padding-left: 5px;
+	padding-right: 5px;
+}

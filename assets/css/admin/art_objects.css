@@ -1,0 +1,85 @@
+/* Item Data */
+.ArtObjectForm {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.ArtObjectForm td:nth-child(1){
+	background-color: #eee;
+	white-space: nowrap;
+	width: 50px;
+}
+.ArtObjectForm td:last-child{
+	background-color: #fff;
+}
+
+.ArtObjectForm tr,.ArtObjectForm td{
+	padding-left: 10px;
+	padding-right: 10px;
+	text-decoration: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  height: 42px;
+  vertical-align: true;
+}
+.ArtObjectForm td>input {
+	background: #f7f7f7;
+	font-size: 14px;
+	padding-left: 10px;
+	height: 100%;
+	width: 100%;
+	border: none;
+}
+.ArtObjectForm td>div>input[type=file] {
+	padding: 0px;
+	margin: 0px;
+	background: #f7f7f7;
+	align-self: stretch;
+	width: 100%;
+	flex-grow: 1;
+}
+
+
+/* Fields */
+.FieldTable td:nth-child(1){
+	padding: 0px;
+	width: auto;
+}
+.FieldTable td:nth-child(2){
+	width: 100px;
+}
+.FieldTable td:nth-child(3){
+	width: 30px;
+}
+.FieldTable td:nth-child(4){
+	padding: 0px;
+	width: 40px;
+}
+
+.FieldTable th:nth-child(1){
+
+}
+.FieldTable th:nth-child(2){
+	width: 100px;
+}
+.FieldTable th:nth-child(3){
+	width: 30px;
+}
+.FieldTable th:nth-child(4){
+	width: 40px;
+}
+
+svg {
+	height: 100%;
+	background: #f7f7f7;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.fileSelector {
+	height: 100%;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}

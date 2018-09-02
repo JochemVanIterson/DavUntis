@@ -1,0 +1,337 @@
+/* ----------------------------- Common Dialog Holder ----------------------------- */
+.dialog_holder {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999999; /* Sit on top */
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* ----------------------------- Small Dialog ----------------------------- */
+.dialog {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 20%; /* Could be more or less, depending on screen size */
+  min-width: 400px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.dialog_message{
+  padding: 20px;
+}
+.dialog_actionholder{
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  background-color: #fff;
+  border-top: solid 1px #bbb;
+}
+.dialog_negative{
+  flex-grow: 1;
+  width: 50%;
+  text-align: center;
+  line-height: 40px;
+  border-right: solid 1px #bbb;
+}
+.dialog_negative:hover, .dialog_negative:focus {
+  background-color: #eee;
+  text-decoration: none;
+  cursor: pointer;
+}
+.dialog_positive{
+  flex-grow: 1;
+  width: 50%;
+  text-align: center;
+  line-height: 40px;
+}
+.dialog_positive:hover, .dialog_positive:focus {
+  background-color: #eee;
+  text-decoration: none;
+  cursor: pointer;
+}
+.dialog_disabled:hover, .dialog_disabled:focus {
+  background-color: #fff;
+  text-decoration: none;
+  cursor: default;
+}
+
+/* ----------------------------- Large Dialog ----------------------------- */
+.dialog_large {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 60%; /* Could be more or less, depending on screen size */
+  min-width: 600px;
+  max-width: 1000px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@media only screen and (max-width: 600px) {
+  .dialog_large {
+	   width: 100%;
+     min-width: unset;
+  }
+}
+.dialog_content{
+  width: 100%;
+}
+.dialog_positive_disabled{
+  background-color: #ddd;
+  cursor: default;
+}
+.dialog_positive_disabled:hover{
+  background-color: #ddd;
+  cursor: default;
+}
+
+/* ----------------------------- Login Dialog ----------------------------- */
+/* .login_container{
+	width: 400px;
+	padding: 8% 0 0;
+	margin: auto;
+}
+@media only screen and (max-height: 550px) {
+  .login_container {
+	   padding: 20px 0 0;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .login_container {
+	   width: 100%;
+  }
+}
+.login_icon{
+	display: block;
+	height: 84px;
+	width: 84px;
+	margin: 0 auto 25px;
+	padding: 0;
+	pointer-events: none;
+}
+.login_box{
+  border-radius: 8px;
+  overflow: hidden;
+	margin-top: 20px;
+	margin-left: 0;
+	padding: 26px 24px 26px;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+	color: #72777c;
+	line-height: 1.5;
+	font-weight: 400;
+}
+.login_container input[type=text], .login_container input[type=password]{
+	border: 1px solid #ddd;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07);
+	color: #32373c;
+	outline: 0;
+	font-size: 24px;
+	width: 100%;
+	padding: 3px;
+	margin: 2px 6px 16px 0;
+	background: #fbfbfb;
+}
+#login_button{
+	float: right;
+	background-color: var(--Accent);
+  border: none;
+  border-radius: 2px;
+  color: white;
+  padding: 10px 24px;
+  text-align: center;
+  text-decoration: none;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+#login_button:hover {
+    background-color: var(--AccentLight);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .13);
+    color: white;
+}
+#login_button:active {
+    background-color: var(--AccentDark);
+}
+.error_view{
+	float: left;
+	display: none;
+	color: red;
+} */
+
+/* ----------------------------- Message ----------------------------- */
+.message{
+  background-color: #fefefee0;
+  display: none;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 10px;
+  width: 300px;
+  height: 50px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 20px;
+}
+
+/* ----------------------------- Button ----------------------------- */
+button {
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  margin:0px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ----------------------------- Switch ----------------------------- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+.switch input {display:none;}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+/* ----------------------------- Rounded Switch ----------------------------- */
+.slider.round {
+  border-radius: 22px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* ----------------------------- Color Picker ----------------------------- */
+.sp-dd{
+  display: none;
+}
+.sp-preview{
+  margin-right: unset;
+  border: unset;
+  height: 100%;
+  width: 100%;
+}
+.sp-replacer{
+  padding: unset;
+  border: none;
+  border-radius: 2px;
+  height: 30px;
+  width: 50px;
+}
+.sp-replacer:hover, .sp-replacer.sp-active{
+  border-color: #bbb;
+  box-shadow: 1px 1px 6px 3px rgba(0,0,0,0.2);
+}
+.sp-container {
+  border-color: #bbb;
+  box-shadow: 1px 1px 6px 3px rgba(0,0,0,0.2);
+}
+
+/* ----------------------------- Native Dropdown ----------------------------- */
+.native-dropdown{
+  border: 1px solid #ddd;
+  height: calc(100% - 10px);
+  font-size: 14px;
+  border-radius: 0;
+  margin: 5px;
+}
+
+/* ----------------------------- Dropdown Menu ----------------------------- */
+/*the container must be positioned relative:*/
+.custom-select {
+  position: relative;
+  font-family: Arial;
+}
+.custom-select select {
+  display: none; /*hide original SELECT element:*/
+}
+.select-selected {
+  background-color: #eee;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+}
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #000 transparent transparent transparent;
+}
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #000 transparent;
+  top: 7px;
+}
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  /* color: #ffffff; */
+  padding: 8px 16px;
+  cursor: pointer;
+}
+/*style items (options):*/
+.select-items {
+  position: absolute;
+  background-color: #eee;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  box-shadow: 1px 1px 6px 3px rgba(0,0,0,0.2);
+}
+/*hide the items when the select box is closed:*/
+.select-hide {
+  display: none;
+}
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
