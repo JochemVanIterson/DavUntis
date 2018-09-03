@@ -27,11 +27,19 @@
     die(json_encode($LoginDone));
   }
   if($_POST['action']=='untis_departments'){
-    if($_POST['fresh']=='true'){
+    if(isset($_POST['fresh']) && $_POST['fresh']=='true'){
       $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
-      $data = $UntisData->Departments();
-      echo json_encode($data, true);
-      die;
+      $ServerDepartments = $UntisData->Departments();
+      $response = $UntisRetreiver->insertDepartments($ServerDepartments);
+      if($response['success']=true){
+        $data = $UntisRetreiver->getDepartments();
+        die(json_encode($data, true));
+      } else {
+        die(json_encode($response, true));
+      }
+    } else {
+      $data = $UntisRetreiver->getDepartments();
+      die(json_encode($data, true));
     }
   }
 
@@ -96,10 +104,10 @@
   if($_POST['action']=='updateDB'){ // ---------------------------------------- Update DB --------------------------------- //
     $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
     $ServerDepartments = $UntisData->Departments();
-
     $response = $UntisRetreiver->insertDepartments($ServerDepartments);
     die(json_encode($response));
   }
+
   // ---------------------------------------------------------------- SQL Actions ---------------------------------------------------------- //
   if($_POST['action']=='user'){ // -------------------------------------------- Users ------------------------------------- //
     if($_POST['sql_action']=='insert'){

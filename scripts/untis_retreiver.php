@@ -13,6 +13,7 @@
       $this->connection = mysqli_connect($SQLservername, $SQLusername, $SQLpassword, $SQLdbname) or die("Error " . mysqli_error($this->connection));
     }
 
+    // ------------------------------------------------------------------------ Departments ------------------------------------------------------------------------ //
     public function insertDepartments($data){
       $prefixDepartments = $this->ini_array['msql_prefix']."Departments";
       $prefixDepartmentsHis = $this->ini_array['msql_prefix']."Departments_his";
@@ -73,6 +74,48 @@
         "changed"=>$changedIDs,
         "removed"=>$removedIDs
       ));
+    }
+    public function getDepartments(){
+      $prefixDepartments = $this->ini_array['msql_prefix']."Departments";
+      $prefixDepartmentsHis = $this->ini_array['msql_prefix']."Departments_his";
+
+      $sqlq_Get = "SELECT * from $prefixDepartments";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      $Departments = array();
+      if (mysqli_num_rows($sql_Get) > 0) {
+        while($row = mysqli_fetch_assoc($sql_Get)) {
+          $sqlq_GetHistory = "SELECT * from $prefixDepartmentsHis WHERE itm_id=$row[id]";
+          $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+          $row['history'] = array();
+          if (mysqli_num_rows($sql_GetHistory) > 0) {
+            while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+              array_push($row['history'], $rowHistory);
+            }
+          }
+          array_push($Departments, $row);
+        }
+      }
+      return $Departments;
+    }
+    public function getSingleDepartment($id){
+      $prefixDepartments = $this->ini_array['msql_prefix']."Departments";
+      $prefixDepartmentsHis = $this->ini_array['msql_prefix']."Departments_his";
+
+      $sqlq_Get = "SELECT * from $prefixDepartments WHERE id=$id";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      if (mysqli_num_rows($sql_Get) > 0) {
+        $row = mysqli_fetch_assoc($sql_Get);
+        $sqlq_GetHistory = "SELECT * from $prefixDepartmentsHis WHERE itm_id=$id";
+        $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+        $row['history'] = array();
+        if (mysqli_num_rows($sql_GetHistory) > 0) {
+          while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+            array_push($row['history'], $rowHistory);
+          }
+        }
+        return $row;
+      }
+      return null;
     }
   }
 ?>

@@ -17,8 +17,7 @@ function RoosterListPage(parent){
 
   self.getData = function(){
     $.post('scripts/actions.php',{
-      action: 'untis_departments',
-      fresh: true
+      action: 'untis_departments'
     },function(data, status){
       console.log("ajax", `data ${data}, status ${status}`);
       $('.page_roosterlist_container').text(data);
