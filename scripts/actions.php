@@ -5,6 +5,7 @@
 
   require_once("../config.php");
   require_once($ini_array['BasePath']."scripts/sql.php");
+  require_once($ini_array['BasePath']."scripts/untis_retreiver.php");
   require_once($ini_array['BasePath']."scripts/helpers/encryption.php");
 
   require_once($ini_array["BasePath"]."scripts/untis_curl.php");
@@ -12,6 +13,7 @@
   require_once($ini_array["BasePath"]."scripts/untis_data.php");
 
   $SQL = new SQL($ini_array);
+  $UntisRetreiver = new untisReceiver($ini_array);
 
   $UntisURL = $SQL->getSetting('untis_url');
   $UntisSchool = $SQL->getSetting('untis_school');
@@ -91,7 +93,13 @@
     }
     die(json_encode(array("error"=>"page doesn't exist"), true));
   }
+  if($_POST['action']=='updateDB'){ // ---------------------------------------- Update DB --------------------------------- //
+    $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
+    $ServerDepartments = $UntisData->Departments();
 
+    $response = $UntisRetreiver->insertDepartments($ServerDepartments);
+    die(json_encode($response));
+  }
   // ---------------------------------------------------------------- SQL Actions ---------------------------------------------------------- //
   if($_POST['action']=='user'){ // -------------------------------------------- Users ------------------------------------- //
     if($_POST['sql_action']=='insert'){
@@ -105,7 +113,7 @@
     }
     die(json_encode($response));
   }
-  if($_POST['action']=='untis'){ // -------------------------------------------- Untis ------------------------------------- //
+  if($_POST['action']=='untis'){ // ------------------------------------------- Untis ------------------------------------- //
     if($_POST['sql_action']=='insert'){
       $response = $SQL->addSetting($_POST['fields']);
     }

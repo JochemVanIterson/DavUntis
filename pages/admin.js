@@ -398,6 +398,7 @@ function AdminPage(parent){
           </tr>
         </table>
       </div>
+      <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
     view.find('#saveUntisSetup').click(function(){
       $.post('scripts/actions.php',{
@@ -417,6 +418,15 @@ function AdminPage(parent){
           });
           SuccessDialog.show();
         }
+      });
+    });
+    view.find('#UpdateDbButton').click(function(){
+      $.post('scripts/actions.php',{
+        action: 'updateDB',
+      },
+      function(data, status){
+        data = JSON.parse(data);
+        console.log('updateDB', data);
       });
     });
     return view;
