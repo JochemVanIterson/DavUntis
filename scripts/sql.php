@@ -148,6 +148,7 @@ class SQL {
 		return $UserData;
 	}
 
+	// ------------------------------------------------------------------------ Settings --------------------------------------------------------------------- //
 	function addSetting($post_data){ // -------------------------- Add ----------------------------- //
 		$key = $post_data['key'];
 		$value = $post_data['value'];
@@ -190,6 +191,85 @@ class SQL {
 		}
 		$SettingData = mysqli_fetch_array($sql_GetSetting, MYSQLI_ASSOC);
 		return $SettingData['setting_value'];
+	}
+
+	// ------------------------------------------------------------------------ User ------------------------------------------------------------------------- //
+	function addDummyUser($post_data){ // ----------------------------- Add ----------------------------- //
+		$PrivateKey = $this->ini_array['PrivateKey'];
+		$Username = $post_data['username'];
+		$IV = $this->randomString(16); //Unieke code per user, voor "end to end" encryptie
+		$PasswordRaw = $post_data['password'];
+		$PasswordEnc = Encryption::encrypt($PrivateKey, $IV, $PasswordRaw);
+		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
+		$sql_Insert_DummyUser = "REPLACE INTO $prefixDummyUser (username, password, iv)
+		VALUES ('$Username', '$PasswordEnc', '$IV')";
+
+		if (!mysqli_query($this->connection, $sql_Insert_DummyUser)) {
+			return array("status"=>"failed", "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function updateDummyUser($post_data){ // -------------------------- Update -------------------------- //
+		if($post_data['password'] == ""){
+			unset($post_data['password']);
+		} else {
+			$IV = $this->randomString(16); //Unieke code per user, voor "end to end" encryptie
+			$PasswordRaw = $post_data['password'];
+			$PrivateKey = $this->ini_array['PrivateKey'];
+			$PasswordEnc = Encryption::encrypt($PrivateKey, $IV, $PasswordRaw);
+			$post_data['password'] = mysqli_real_escape_string($this->connection, $PasswordEnc);
+			$post_data['iv'] = $IV;
+		}
+		$username = $post_data['username'];
+		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
+		$sql_update_dummyuser = "UPDATE $prefixDummyUser SET username='$post_data[username]'";
+		if(isset($post_data['password'])){
+			$sql_update_dummyuser .= ", password='$PasswordEnc', iv='$IV'";
+		}
+		$sql_update_dummyuser .= " WHERE id=".$post_data['id'];
+
+		if (!mysqli_query($this->connection, $sql_update_dummyuser)) {
+			return array("status"=>"failed", "query"=>$sql_update_dummyuser, "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function removeDummyUser($id){ // ------------------------------- Remove -------------------------- //
+		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
+		$sql_remove_dummyuser = "DELETE FROM $prefixDummyUser WHERE id='$id'";
+		if (!mysqli_query($this->connection, $sql_remove_dummyuser)) {
+			return array("status"=>"failed", "query"=>$sql_remove_dummyuser, "error"=>"SQL error: ".mysqli_connect_error());
+		} else {
+			return array("status"=>"success");
+		}
+	}
+	function getDummyUser($user){ // ---------------------------------- Get Query ----------------------- //
+		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
+		$sqlq_GetUser = "SELECT * from $prefixDummyUser WHERE (username = '$user') LIMIT 1";
+		$sql_GetUser = mysqli_query($this->connection, $sqlq_GetUser);
+		if(mysqli_num_rows($sql_GetUser) == 0){
+			return null;
+		}
+		$UserData = mysqli_fetch_array($sql_GetUser, MYSQLI_ASSOC);
+		return $UserData;
+	}
+	function getDummyUsers($web = true){ // --------------------------- Get All ------------------------- //
+		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
+		$sqlq_GetDummyUsers = "SELECT * from $prefixDummyUser";
+		$sql_GetDummyUsers = mysqli_query($this->connection, $sqlq_GetDummyUsers);
+		if(mysqli_num_rows($sql_GetDummyUsers) == 0){
+			return array();
+		}
+		$DummyUserData = array();
+		while ($row_user = mysqli_fetch_assoc($sql_GetDummyUsers)){
+			if(!$web){
+				unset($row_user['password']);
+				unset($row_user['iv']);
+			}
+			array_push($DummyUserData, $row_user);
+		}
+		return $DummyUserData;
 	}
 
 	// ------------------------------------------------------------------------ Helpers ---------------------------------------------------------------------- //

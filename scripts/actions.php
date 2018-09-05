@@ -18,14 +18,20 @@
   $UntisURL = $SQL->getSetting('untis_url');
   $UntisSchool = $SQL->getSetting('untis_school');
 
+  $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
+  $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
+
   // ---------------------------------------------------------------- UNTIS ---------------------------------------------------------------- //
   if($_POST['action']=='untis_login'){
     $data = $_POST['data'];
-		$UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
-		if(!isset($_COOKIE['JSESSIONID']))$UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
     $LoginDone = $UntisLogin->Login($UntisSchool, $data['username'], $data['password']);
     die(json_encode($LoginDone));
   }
+  $PrivateKey = $ini_array['PrivateKey'];
+  $DummyUsers = $SQL->getDummyUsers(true);
+  $RandomDummyUser = $DummyUsers[rand(0, sizeof($DummyUsers)-1)];
+  $RandomDummyUser['password'] = Encryption::decrypt($PrivateKey, $RandomDummyUser['iv'], $RandomDummyUser['password']);
+  $LoginDone = $UntisLogin->Login($UntisSchool, $RandomDummyUser['username'], $RandomDummyUser['password']);
   if($_POST['action']=='untis_departments'){
     if(isset($_POST['fresh']) && $_POST['fresh']=='true'){
       $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
@@ -97,6 +103,7 @@
       $UntisData = array();
       $UntisData['untis_url'] = $SQL->getSetting('untis_url');
       $UntisData['untis_school'] = $SQL->getSetting('untis_school');
+      $UntisData['dummyUsers'] = $SQL->getDummyUsers();
       die(json_encode(array("page"=>$_POST['page'], "data"=>$UntisData)));
     }
     die(json_encode(array("error"=>"page doesn't exist"), true));
@@ -148,6 +155,31 @@
       if($response['status']!="success"){
          die(json_encode($response));
       }
+    }
+    die(json_encode($response));
+  }
+  if($_POST['action']=='dummyUser'){ // ------------------------------------------- Untis ------------------------------------- //
+    if($_POST['sql_action']=='saveMix'){
+      $_POST['fields']['insert'] = json_decode($_POST['fields']['insert'], true);
+      $_POST['fields']['update'] = json_decode($_POST['fields']['update'], true);
+      foreach ($_POST['fields']['insert'] as $key => $value) {
+        $response = $SQL->addDummyUser($value);
+        if($response['status']!='success')die(json_encode($response));
+      }
+      foreach ($_POST['fields']['update'] as $key => $value) {
+        $response = $SQL->updateDummyUser($value);
+        if($response['status']!='success')die(json_encode($response));
+      }
+      die(json_encode(array("status"=>"success", "postdata"=>$_POST)));
+    }
+    if($_POST['sql_action']=='insert'){
+      $response = $SQL->addDummyUser($_POST['fields']);
+    }
+    if($_POST['sql_action']=='update'){
+      $response = $SQL->updateDummyUser($_POST['fields']);
+    }
+    if($_POST['sql_action']=='remove'){
+      $response = $SQL->removeDummyUser($_POST['id']);
     }
     die(json_encode($response));
   }

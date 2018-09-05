@@ -73,8 +73,8 @@ function LoginPage(parent){
         self.view.find('.error_view').show();
         return;
       }
-      setCookie("schoolname", response.data.schoolname, 10);
-      setCookie("JSESSIONID", response.data.JSESSIONID, 10);
+      // setCookie("schoolname", response.data.schoolname, 10);
+      // setCookie("JSESSIONID", response.data.JSESSIONID, 10);
       setCookie("username", username, 10);
 
       $('#logoutButton').text("Log Out");

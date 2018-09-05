@@ -30,7 +30,7 @@ class UntisLogin{
 		preg_match('/Set-Cookie: JSESSIONID=(.*?); /', $CurlResponse['response'], $JSESSIONID_match);
 		$this->JSESSIONID = $JSESSIONID_match[1];
 		try {
-			setrawcookie("JSESSIONID", $this->JSESSIONID, time()+3600);
+			// setrawcookie("JSESSIONID", $this->JSESSIONID, time()+3600);
 		} catch (Exception $e) {
 		}
 
@@ -44,7 +44,7 @@ class UntisLogin{
 		$schoolname = $this->schoolname;
 
 		try {
-			setrawcookie("schoolname", $this->schoolname, time()+3600);
+			// setrawcookie("schoolname", $this->schoolname, time()+3600);
 		} catch (Exception $e) {
 			//echo 'Caught exception: ',  $e->getMessage(), "\n";
 		}

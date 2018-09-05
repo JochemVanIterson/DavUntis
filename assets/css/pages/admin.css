@@ -89,7 +89,7 @@
 	flex-grow: 1;
 }
 
-/* ---------------------------------------- List Data ---------------------------------------- */
+/* ---------------------------------------- List Data ---------------------------------------------- */
 .list_element {
 	background-color: #fff;
 	margin: 10px;
@@ -112,7 +112,7 @@
   font-size: 16px;
 }
 
-/* ---------------------------------------- Field Data ---------------------------------------- */
+/* ---------------------------------------- Field Data --------------------------------------------- */
 .FieldTable {
 	width: 100%;
 	border-collapse: collapse;
@@ -121,7 +121,7 @@
 	background-color: white;
 }
 
-/* ---------------------------------------- Buttons ---------------------------------------- */
+/* ---------------------------------------- Buttons ------------------------------------------------ */
 .removeButton {
 	background: var(--Accent);
 }
@@ -231,6 +231,7 @@
 }
 
 /* ---------------------------------------- Admin page Untis --------------------------------------- */
+/* ---------------------------- Setup ---------------------------- */
 .untis_settings_holder{
 	background-color: #fff;
 	margin: 10px;
@@ -269,6 +270,75 @@
 	background-color: #fff;
 }
 #untis_setup_table .saveButton{
+	float: right;
+}
+
+/* ---------------------------- Dummy users ---------------------- */
+.untis_dummy_holder{
+	background-color: #fff;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.untis_dummy_holder>#title{
+	font-size: x-large;
+	padding: 12px 10px;
+}
+#untis_dummy_table{
+	width: 100%;
+	border-collapse: collapse;
+}
+#untis_dummy_table td{
+	text-decoration: none;
+	font-size: 16px;
+	border: 1px solid #ddd;
+	height: 42px;
+}
+#untis_dummy_table th{
+	text-decoration: none;
+	font-size: 16px;
+	border: 1px solid #ddd;
+	background-color: #eee;
+	height: 42px;
+}
+#untis_dummy_table input{
+	padding: 0px;
+	padding-left: 10px;
+	height: 42px;
+	font-size: 14px;
+	width: calc(100% - 10px);
+	border-width: 0px;
+}
+#untis_dummy_table #actions>td{
+	padding: 0px;
+	background-color: #fff;
+}
+#untis_dummy_table td#addDummyUser{
+	text-align: center;
+	color: white;
+	background: var(--AccentCustom);
+}
+#untis_dummy_table td#addDummyUser:hover{
+	background: var(--AccentDarkCustom);
+}
+#untis_dummy_table td#addDummyUser:active{
+	background: var(--AccentLightCustom);
+}
+#untis_dummy_table td.dummy_removebutton{
+	width: 42px;
+	text-align: center;
+	font-size: large;
+	color: white;
+	background-color: #f00;
+	user-select: none;
+  cursor: pointer;
+}
+#untis_dummy_table td.dummy_removebutton:hover{
+	background-color: #f33;
+}
+#untis_dummy_table td.dummy_removebutton:active{
+	background-color: #f88;
+}
+#untis_dummy_table .saveButton{
 	float: right;
 }
 

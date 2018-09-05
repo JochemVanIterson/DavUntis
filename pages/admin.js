@@ -266,6 +266,33 @@ function AdminPage(parent){
         } else {
           $('#untis_school').attr('placeholder', 'empty');
         }
+
+        response.data.dummyUsers.forEach(function(DummyUserObject){
+          view.find('#dummy_table_header').after($(`<tr class='dummy_row' id='dummy_${DummyUserObject.id}'>
+            <td><input class='dummy_username' placeholder='Username' value='${DummyUserObject.username}'></td>
+            <td><input class='dummy_password' placeholder='Unchanged' type='password'></td>
+            <td class='dummy_removebutton'>X</td>
+          </tr>`));
+        });
+        view.find('#untis_dummy_table').find('.dummy_removebutton').click(function(){
+          parent = $(this).closest('.dummy_row');
+          id = parent.attr('id').replace(/dummy_/g,'');
+          name = parent.find('.dummy_username').val()
+          SuccessDialog = new Dialog('DummyUserRemove', true, `Remove user ${name}?`, function(){
+            $.post('scripts/actions.php',{
+              action: 'dummyUser',
+              sql_action: 'remove',
+              id:id
+            },
+            function(data, status){
+              data = JSON.parse(data);
+              if(data.status=='success'){
+                self.show('Untis');
+              }
+            });
+          }, 'Remove', function(){}, 'Cancel');
+          SuccessDialog.show();
+        });
         console.log(response.data);
       }
     });
@@ -398,15 +425,43 @@ function AdminPage(parent){
           </tr>
         </table>
       </div>
+      <div class='untis_dummy_holder'>
+        <div id='title'>Untis dummy users</div>
+        <table id='untis_dummy_table'>
+          <tr id='dummy_table_header'>
+            <th>username</th>
+            <th>password</th>
+            <th></th>
+          </tr>
+          <tr id='new_dummy_row'>
+            <td colspan=3 id='addDummyUser'>
+              New User
+            </td>
+          </tr>
+          <tr id='actions'>
+            <td colspan=3>
+              <button id='saveUntisDummy' class='saveButton'>Save</button>
+            </td>
+          </tr>
+        </table>
+      </div>
       <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
+    newcounter = 0;
+    view.find('#addDummyUser').click(function(){
+      view.find('#new_dummy_row').before($(`<tr class='new_row' id='new_${newcounter++}'>
+        <td><input class='dummy_username' placeholder='Username'></td>
+        <td><input class='dummy_password' placeholder='Password' type='password'></td>
+        <td class='dummy_removebutton'>X</td>
+      </tr>`));
+    });
     view.find('#saveUntisSetup').click(function(){
       $.post('scripts/actions.php',{
         action: 'untis',
         sql_action: 'update',
         fields: {
           untis_url: view.find('input#untis_url').val(),
-          untis_school: view.find('input#untis_school').val(),
+          untis_school: view.find('input#untis_school').val()
         }
       },
       function(data, status){
@@ -427,6 +482,39 @@ function AdminPage(parent){
       function(data, status){
         data = JSON.parse(data);
         console.log('updateDB', data);
+      });
+    });
+    view.find('#saveUntisDummy').click(function(){
+      var updateItms = [];
+      var newItms = [];
+      view.find('#untis_dummy_table').find('tr.dummy_row').each(function(){
+        id = $(this).attr('id').replace(/dummy_/g,'');
+        username = $(this).find('.dummy_username').val();
+        password = $(this).find('.dummy_password').val();
+        updateItms.push({'id':id, 'username': username, 'password': password});
+      });
+      view.find('#untis_dummy_table').find('tr.new_row').each(function(){
+        username = $(this).find('.dummy_username').val();
+        password = $(this).find('.dummy_password').val();
+        newItms.push({'username': username, 'password': password});
+      });
+
+      $.post('scripts/actions.php',{
+        action: 'dummyUser',
+        sql_action: 'saveMix',
+        fields:{
+          insert: JSON.stringify(newItms),
+          update: JSON.stringify(updateItms)
+        }
+      },
+      function(data, status){
+        data = JSON.parse(data);
+        if(data.status=='success'){
+          SuccessDialog = new Dialog('DummyUserSaved', true, `Dummy users saved`, function(){
+            self.show('Untis');
+          });
+          SuccessDialog.show();
+        }
       });
     });
     return view;
