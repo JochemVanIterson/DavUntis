@@ -17,6 +17,7 @@
 
   $UntisURL = $SQL->getSetting('untis_url');
   $UntisSchool = $SQL->getSetting('untis_school');
+  $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
 
   $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
   $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
@@ -33,20 +34,9 @@
   $RandomDummyUser['password'] = Encryption::decrypt($PrivateKey, $RandomDummyUser['iv'], $RandomDummyUser['password']);
   $LoginDone = $UntisLogin->Login($UntisSchool, $RandomDummyUser['username'], $RandomDummyUser['password']);
   if($_POST['action']=='untis_departments'){
-    if(isset($_POST['fresh']) && $_POST['fresh']=='true'){
-      $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
-      $ServerDepartments = $UntisData->Departments();
-      $response = $UntisRetreiver->insertDepartments($ServerDepartments);
-      if($response['success']=true){
-        $data = $UntisRetreiver->getDepartments();
-        die(json_encode($data, true));
-      } else {
-        die(json_encode($response, true));
-      }
-    } else {
-      $data = $UntisRetreiver->getDepartments();
-      die(json_encode($data, true));
-    }
+    $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
+    $data = $UntisRetreiver->getDepartments($fresh, $UntisData);
+    die($data);
   }
 
   // ---------------------------------------------------------------- ADMIN ---------------------------------------------------------------- //
@@ -104,6 +94,8 @@
       $UntisData['untis_url'] = $SQL->getSetting('untis_url');
       $UntisData['untis_school'] = $SQL->getSetting('untis_school');
       $UntisData['dummyUsers'] = $SQL->getDummyUsers();
+      $UntisData['departments'] = $UntisRetreiver->getDepartmentsSQL();
+      $UntisData['dis_departments'] = $SQL->getSetting('dis_departments');
       die(json_encode(array("page"=>$_POST['page'], "data"=>$UntisData)));
     }
     die(json_encode(array("error"=>"page doesn't exist"), true));
@@ -156,9 +148,20 @@
          die(json_encode($response));
       }
     }
+
+    if($_POST['sql_action']=='dis_departments'){
+      if($SQL->getSetting('dis_departments')==null){
+        $response = $SQL->addSetting(array("key"=>"dis_departments", "value"=>json_encode($_POST['fields'])));
+      } else {
+        $response = $SQL->updateSetting(array("key"=>"dis_departments", "value"=>json_encode($_POST['fields'])));
+      }
+      if($response['status']!="success"){
+         die(json_encode($response));
+      }
+    }
     die(json_encode($response));
   }
-  if($_POST['action']=='dummyUser'){ // ------------------------------------------- Untis ------------------------------------- //
+  if($_POST['action']=='dummyUser'){ // --------------------------------------- DummyUsers -------------------------------- //
     if($_POST['sql_action']=='saveMix'){
       $_POST['fields']['insert'] = json_decode($_POST['fields']['insert'], true);
       $_POST['fields']['update'] = json_decode($_POST['fields']['update'], true);

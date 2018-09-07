@@ -255,6 +255,7 @@ function AdminPage(parent){
       }
       if(response.page=="Untis"){ // ---------------------------------------------- PageData Untis ---------------------------------------------- //
         console.log('pagedata', response.data);
+        response.data.dis_departments = JSON.parse(response.data.dis_departments);
         if(response.data.untis_url!=null){
           $('#untis_url').val(response.data.untis_url);
         } else {
@@ -274,6 +275,21 @@ function AdminPage(parent){
             <td class='dummy_removebutton'>X</td>
           </tr>`));
         });
+
+        response.data.departments.forEach(function(DepartmentObject){
+          view.find('#department_list').append($(`
+            <div class='department_itm' id='dep_${DepartmentObject.id}'>
+              ${DepartmentObject.name}
+            </div>`
+          ));
+        });
+        response.data.dis_departments.forEach(function(itm){
+          view.find('#department_list').find('#dep_'+itm).addClass('selected');
+        });
+        view.find('.department_itm').click(function(){
+          $(this).toggleClass('selected');
+        });
+
         view.find('#untis_dummy_table').find('.dummy_removebutton').click(function(){
           parent = $(this).closest('.dummy_row');
           id = parent.attr('id').replace(/dummy_/g,'');
@@ -405,7 +421,7 @@ function AdminPage(parent){
     view.append(itmAdd);
     return view;
   }
-  self.pageUntis = function(){ // -------------------------------------------------- Page Untis ---------------------------------------------- //
+  self.pageUntis = function(){ // ------------------------------------------------- Page Untis -------------------------------------------------- //
     view = $(`<div class='admin_page_untis'>
       <div class='untis_settings_holder'>
         <div id='title'>Untis setup</div>
@@ -444,6 +460,13 @@ function AdminPage(parent){
             </td>
           </tr>
         </table>
+      </div>
+      <div class='untis_department_selector_holder'>
+        <div id='title'>Disable departments</div>
+        <div id='department_list'></div>
+        <div id='savebutton_holder'>
+          <button id='saveDepartmentSelectors' class='saveButton'>Save</button>
+        </div>
       </div>
       <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
@@ -511,6 +534,28 @@ function AdminPage(parent){
         data = JSON.parse(data);
         if(data.status=='success'){
           SuccessDialog = new Dialog('DummyUserSaved', true, `Dummy users saved`, function(){
+            self.show('Untis');
+          });
+          SuccessDialog.show();
+        }
+      });
+    });
+    view.find('#saveDepartmentSelectors').click(function(){
+      var ids = [];
+      view.find('#department_list').find('.department_itm.selected').each(function(){
+        id = $(this).attr('id').replace(/dep_/g,'');
+        ids.push(id);
+      });
+      console.log(ids);
+      $.post('scripts/actions.php',{
+        action: 'untis',
+        sql_action: 'dis_departments',
+        fields: ids
+      },
+      function(data, status){
+        data = JSON.parse(data);
+        if(data.status=='success'){
+          SuccessDialog = new Dialog('DepartmentsSaved', true, `Disabled departments saved`, function(){
             self.show('Untis');
           });
           SuccessDialog.show();

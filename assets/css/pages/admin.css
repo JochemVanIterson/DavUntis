@@ -270,7 +270,7 @@
 	background-color: #fff;
 }
 #untis_setup_table .saveButton{
-	float: right;
+	width: 100%;
 }
 
 /* ---------------------------- Dummy users ---------------------- */
@@ -339,7 +339,34 @@
 	background-color: #f88;
 }
 #untis_dummy_table .saveButton{
-	float: right;
+	width: 100%;
+}
+
+/* ---------------------------- Department selector ---------------------- */
+.untis_department_selector_holder{
+	background-color: #fff;
+	margin: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.untis_department_selector_holder>#title{
+	font-size: x-large;
+	padding: 12px 10px;
+}
+.untis_department_selector_holder>#department_list>.department_itm{
+	padding: 10px;
+	border-top: 1px solid #aaa;
+}
+.untis_department_selector_holder>#department_list>.department_itm:hover{
+	background-color: #eee;
+}
+.untis_department_selector_holder>#department_list>.department_itm.selected{
+	background-color: #bbb;
+}
+.untis_department_selector_holder>#department_list>.department_itm.selected:hover{
+	background-color: #ccc;
+}
+.untis_department_selector_holder #saveDepartmentSelectors{
+	width: 100%;
 }
 
 /* ---------------------------------------- Smaller Screens ---------------------------------------- */

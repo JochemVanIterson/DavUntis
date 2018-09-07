@@ -14,6 +14,21 @@
     }
 
     // ------------------------------------------------------------------------ Departments ------------------------------------------------------------------------ //
+    public function getDepartments($fresh, $UntisData){
+      if($fresh){
+        $ServerDepartments = $UntisData->Departments();
+        $response = $this->insertDepartments($ServerDepartments);
+        if($response['success']=true){
+          $data = $this->getDepartmentsSQL();
+          return json_encode($data, true);
+        } else {
+          return json_encode($response, true);
+        }
+      } else {
+        $data = $this->getDepartmentsSQL();
+        return json_encode($data, true);
+      }
+    }
     public function insertDepartments($data){
       $prefixDepartments = $this->ini_array['msql_prefix']."Departments";
       $prefixDepartmentsHis = $this->ini_array['msql_prefix']."Departments_his";
@@ -75,11 +90,11 @@
         "removed"=>$removedIDs
       ));
     }
-    public function getDepartments(){
+    public function getDepartmentsSQL(){
       $prefixDepartments = $this->ini_array['msql_prefix']."Departments";
       $prefixDepartmentsHis = $this->ini_array['msql_prefix']."Departments_his";
 
-      $sqlq_Get = "SELECT * from $prefixDepartments";
+      $sqlq_Get = "SELECT * from $prefixDepartments ORDER BY name";
       $sql_Get = mysqli_query($this->connection, $sqlq_Get);
       $Departments = array();
       if (mysqli_num_rows($sql_Get) > 0) {
