@@ -44,7 +44,7 @@ class UntisData{
     }
 	}
 
-  public function Classes(){
+  public function SchoolClasses(){
     $json = $this->PageConfig(1);
 		return $json['data']['elements'];
 	}

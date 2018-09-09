@@ -17,7 +17,8 @@ function RoosterListPage(parent){
 
   self.getData = function(){
     $.post('scripts/actions.php',{
-      action: 'untis_departments'
+      action: 'untis_school_classes',
+      fresh: true
     },function(data, status){
       console.log("ajax", `data ${data}, status ${status}`);
       $('.page_roosterlist_container').text(data);

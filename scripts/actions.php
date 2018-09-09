@@ -17,11 +17,9 @@
 
   $UntisURL = $SQL->getSetting('untis_url');
   $UntisSchool = $SQL->getSetting('untis_school');
-  $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
 
   $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
   $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
-
   // ---------------------------------------------------------------- UNTIS ---------------------------------------------------------------- //
   if($_POST['action']=='untis_login'){
     $data = $_POST['data'];
@@ -33,9 +31,18 @@
   $RandomDummyUser = $DummyUsers[rand(0, sizeof($DummyUsers)-1)];
   $RandomDummyUser['password'] = Encryption::decrypt($PrivateKey, $RandomDummyUser['iv'], $RandomDummyUser['password']);
   $LoginDone = $UntisLogin->Login($UntisSchool, $RandomDummyUser['username'], $RandomDummyUser['password']);
+
+  $sessionData = $LoginDone['data'];
+  $UntisData = new UntisData($UntisURL, $sessionData, $ini_array);
+
   if($_POST['action']=='untis_departments'){
     $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
     $data = $UntisRetreiver->getDepartments($fresh, $UntisData);
+    die($data);
+  }
+  if($_POST['action']=='untis_school_classes'){
+    $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
+    $data = $UntisRetreiver->getSchoolClasses($fresh, $UntisData);
     die($data);
   }
 
