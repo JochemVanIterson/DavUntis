@@ -35,6 +35,7 @@
   $sessionData = $LoginDone['data'];
   $UntisData = new UntisData($UntisURL, $sessionData, $ini_array);
 
+  // ---------------------------------------------------------------- DATA ----------------------------------------------------------------- //
   if($_POST['action']=='untis_departments'){
     $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
     $data = $UntisRetreiver->getDepartments($fresh, $UntisData);
@@ -44,6 +45,47 @@
     $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
     $data = $UntisRetreiver->getSchoolClasses($fresh, $UntisData);
     die($data);
+  }
+
+  // ---------------------------------------------------------------- USER ----------------------------------------------------------------- //
+  if($_POST['action']=='pagedata'){
+    if($_POST['page']=='roosterlist'){
+      $returnArray = array();
+      $returnArray['rooster'] = $SQL->getRoosterUser($_COOKIE['username']);
+      if($returnArray['rooster']==null)die(json_encode(array("page"=>$_POST['page'], "error"=>'empty')));
+
+      $returnArray['departments'] = array();
+      $returnArray['schoolclasses'] = array();
+
+      foreach($returnArray['rooster'] as $key=>$roosteritm){
+        $roosteritm['departments'] = json_decode($roosteritm['departments']);
+        foreach($roosteritm['departments'] as $depID){
+          if(!isset($returnArray['departments'][$depID])){
+            $returnArray['departments'][$depID] = $UntisRetreiver->getSingleDepartment($depID);
+          }
+        }
+
+        $roosteritm['schoolclasses'] = json_decode($roosteritm['schoolclasses']);
+        foreach($roosteritm['schoolclasses'] as $classID){
+          if(!isset($returnArray['schoolclasses'][$classID])){
+            $returnArray['schoolclasses'][$classID] = $UntisRetreiver->getSingleSchoolClass($classID);
+          }
+        }
+      }
+      die(json_encode(array("page"=>$_POST['page'], "data"=>$roosterData)));
+    }
+  }
+
+  // ---------------------------------------------------------------- ScheduleBuilder ------------------------------------------------------ //
+  if($_POST['action']=='ScheduleBuilder'){
+    if($_POST['page']=='dep'){
+      $ReturnData = array();
+      $ReturnData['departments'] = $UntisRetreiver->getDepartmentsSQL();
+      $ReturnData['schoolclasses'] = $UntisRetreiver->getSchoolClassesSQL();
+      $ReturnData['dis_departments'] = json_decode($SQL->getSetting('dis_departments'));
+      die(json_encode(array("page"=>$_POST['page'], "data"=>$ReturnData)));
+    }
+    die(json_encode(array("error"=>"ScheduleBuilder action doesn't exist"), true));
   }
 
   // ---------------------------------------------------------------- ADMIN ---------------------------------------------------------------- //
@@ -88,7 +130,7 @@
     echo json_encode(array("login"=>"success", "data"=>$Login_attempt), true);
     die();
   }
-  if($_POST['action']=='admin_pagedata'){ // ---------------------------------- Page data --------------------------------- //
+  if($_POST['action']=='admin_pagedata'){ // ---------------------------------- Admin Page data --------------------------- //
     if($_POST['page']=='Dash'){ // --------------------------- Dash --------------------------- //
       die(json_encode(array("page"=>$_POST['page'], "data"=>"No Dashdata yet")));
     }

@@ -25,6 +25,7 @@
   <link rel="stylesheet" type="text/css" href="assets/css/pages/home.css">
   <link rel="stylesheet" type="text/css" href="assets/css/pages/login.css">
   <link rel="stylesheet" type="text/css" href="assets/css/pages/roosterlist.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/pages/schedulebuilder.css">
   <link rel="stylesheet" type="text/css" href="assets/css/pages/admin.css">
 
   <?php // ----------------------------------------- UI Elements CSS ---------------------------------- //?>
@@ -45,6 +46,7 @@
   <script type="text/javascript" src="pages/home.js"></script>
   <script type="text/javascript" src="pages/login.js"></script>
   <script type="text/javascript" src="pages/roosterlist.js"></script>
+  <script type="text/javascript" src="pages/schedulebuilder.js"></script>
   <script type="text/javascript" src="pages/admin.js"></script>
 
   <script type="text/javascript" src="pages/openPage.js"></script>

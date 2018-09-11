@@ -275,8 +275,15 @@ function AdminPage(parent){
             <td class='dummy_removebutton'>X</td>
           </tr>`));
         });
-
-        response.data.departments.forEach(function(DepartmentObject){
+        departmentsSorted = Object.values(response.data.departments);
+        departmentsSorted.sort(function(a,b) {
+          if (a.name < b.name)
+            return -1;
+          if (a.name > b.name)
+            return 1;
+          return 0;
+        });
+        departmentsSorted.forEach(function(DepartmentObject){
           view.find('#department_list').append($(`
             <div class='department_itm' id='dep_${DepartmentObject.id}'>
               ${DepartmentObject.name}

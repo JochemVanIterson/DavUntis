@@ -1,3 +1,9 @@
+var style = getComputedStyle(document.body);
+color = style.getPropertyValue('--PrimaryDark');
+
+var metaThemeColor = document.querySelector("meta[name=theme-color]");
+    metaThemeColor.setAttribute("content", color);
+
 if(getCookie('admin_username')!="" && sessionStorage.admin_userdata!=null){ // reload admin ui
   userdata = JSON.parse(sessionStorage.admin_userdata);
   if(getCookie('admin_username') === userdata.username){

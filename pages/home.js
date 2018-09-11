@@ -10,7 +10,7 @@ function HomePage(parent){
         <article>Log in met je WebUntis acountgegevens</article>
         <button id='login_button'>Login</button>
         <footer id='small_text'>
-          <span class='app_title'></span> is ontwikkeld door <b><a href='http://www.audioware.nl/blog'>Jochem van Iterson</a></b><br>
+          <span class='app_title'></span> is ontwikkeld door <b><a href='http://www.audioware.nl/blog/'>Jochem van Iterson</a></b><br>
           Dit systeem maakt gebruik van cookies om de sessiedata op te slaan
         </footer>
       </div>

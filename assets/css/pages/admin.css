@@ -361,6 +361,7 @@
 }
 .untis_department_selector_holder>#department_list>.department_itm.selected{
 	background-color: #bbb;
+	color: #666;
 }
 .untis_department_selector_holder>#department_list>.department_itm.selected:hover{
 	background-color: #ccc;

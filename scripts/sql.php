@@ -14,7 +14,7 @@ class SQL {
 		$this->connection = mysqli_connect($SQLservername, $SQLusername, $SQLpassword, $SQLdbname) or die("Error " . mysqli_error($this->connection));
 	}
 
-	// ------------------------------------------------------------------------ Login ------------------------------------------------------------------------ //
+	// ------------------------------------------------------ Login ------------------------------------------------------ //
 	function Login($user, $password, $publicIV){
 		// ---------Check if User in DB--------- //
 		$prefixUsers = $this->ini_array['msql_prefix']."Users";
@@ -53,7 +53,7 @@ class SQL {
 		return array("login"=>"success", "data"=>mysqli_fetch_array($sql_GetUser, MYSQLI_ASSOC));
 	}
 
-	// ------------------------------------------------------------------------ User ------------------------------------------------------------------------- //
+	// ------------------------------------------------------ User ------------------------------------------------------- //
 	function addUser($post_data){ // ----------------------------- Add ----------------------------- //
 		if(isset($post_data['admin']) && $post_data['admin'] == "on"){
 			$post_data['admin']=1;
@@ -148,7 +148,7 @@ class SQL {
 		return $UserData;
 	}
 
-	// ------------------------------------------------------------------------ Settings --------------------------------------------------------------------- //
+	// ------------------------------------------------------ Settings --------------------------------------------------- //
 	function addSetting($post_data){ // -------------------------- Add ----------------------------- //
 		$key = $post_data['key'];
 		$value = $post_data['value'];
@@ -193,8 +193,8 @@ class SQL {
 		return $SettingData['setting_value'];
 	}
 
-	// ------------------------------------------------------------------------ User ------------------------------------------------------------------------- //
-	function addDummyUser($post_data){ // ----------------------------- Add ----------------------------- //
+	// ------------------------------------------------------ Dummy User ------------------------------------------------- //
+	function addDummyUser($post_data){ // ------------------------ Add ----------------------------- //
 		$PrivateKey = $this->ini_array['PrivateKey'];
 		$Username = $post_data['username'];
 		$IV = $this->randomString(16); //Unieke code per user, voor "end to end" encryptie
@@ -210,7 +210,7 @@ class SQL {
 			return array("status"=>"success");
 		}
 	}
-	function updateDummyUser($post_data){ // -------------------------- Update -------------------------- //
+	function updateDummyUser($post_data){ // --------------------- Update -------------------------- //
 		if($post_data['password'] == ""){
 			unset($post_data['password']);
 		} else {
@@ -235,7 +235,7 @@ class SQL {
 			return array("status"=>"success");
 		}
 	}
-	function removeDummyUser($id){ // ------------------------------- Remove -------------------------- //
+	function removeDummyUser($id){ // ---------------------------- Remove -------------------------- //
 		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
 		$sql_remove_dummyuser = "DELETE FROM $prefixDummyUser WHERE id='$id'";
 		if (!mysqli_query($this->connection, $sql_remove_dummyuser)) {
@@ -244,7 +244,7 @@ class SQL {
 			return array("status"=>"success");
 		}
 	}
-	function getDummyUser($user){ // ---------------------------------- Get Query ----------------------- //
+	function getDummyUser($user){ // ----------------------------- Get Query ----------------------- //
 		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
 		$sqlq_GetUser = "SELECT * from $prefixDummyUser WHERE (username = '$user') LIMIT 1";
 		$sql_GetUser = mysqli_query($this->connection, $sqlq_GetUser);
@@ -254,7 +254,7 @@ class SQL {
 		$UserData = mysqli_fetch_array($sql_GetUser, MYSQLI_ASSOC);
 		return $UserData;
 	}
-	function getDummyUsers($web = true){ // --------------------------- Get All ------------------------- //
+	function getDummyUsers($web = true){ // ---------------------- Get All ------------------------- //
 		$prefixDummyUser = $this->ini_array['msql_prefix']."DummyUsers";
 		$sqlq_GetDummyUsers = "SELECT * from $prefixDummyUser";
 		$sql_GetDummyUsers = mysqli_query($this->connection, $sqlq_GetDummyUsers);
@@ -272,7 +272,40 @@ class SQL {
 		return $DummyUserData;
 	}
 
-	// ------------------------------------------------------------------------ Helpers ---------------------------------------------------------------------- //
+	// ------------------------------------------------------ rooster ------------------------------------------------ //
+	function addRooster($post_data){ // -------------------------- Add ----------------------------- //
+
+	}
+	function updateRooster($post_data){ // ----------------------- Update -------------------------- //
+
+	}
+	function removeRooster($id){ // ------------------------------ Remove -------------------------- //
+
+	}
+	function getRooster($id){ // --------------------------------- Get by ID ----------------------- //
+		$prefixRoosterList = $this->ini_array['msql_prefix']."roosterlist";
+		$sqlq_GetRooster = "SELECT * from $prefixRoosterList WHERE (id = '$id') LIMIT 1";
+		$sql_GetRooster = mysqli_query($this->connection, $sqlq_GetRooster);
+		if(mysqli_num_rows($sql_GetRooster) > 0){
+			$RoosterData = mysqli_fetch_array($sql_GetRooster, MYSQLI_ASSOC);
+		} else {
+			$RoosterData = null;
+		}
+		return $RoosterData;
+	}
+	function getRoosterUser($usermail){ // ----------------------- Get by usermail ----------------- //
+		$prefixRoosterList = $this->ini_array['msql_prefix']."roosterlist";
+		$sqlq_GetRooster = "SELECT * from $prefixRoosterList WHERE (usermail = '$usermail') LIMIT 1";
+		$sql_GetRooster = mysqli_query($this->connection, $sqlq_GetRooster);
+		if(mysqli_num_rows($sql_GetRooster) > 0){
+			$RoosterData = mysqli_fetch_array($sql_GetRooster, MYSQLI_ASSOC);
+		} else {
+			$RoosterData = null;
+		}
+		return $RoosterData;
+	}
+
+	// ------------------------------------------------------ Helpers ---------------------------------------------------- //
 	function randomString($length) {
 		$str = "";
 		$characters = array_merge(range('a','z'), range('0','9'));

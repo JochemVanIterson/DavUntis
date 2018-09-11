@@ -2,18 +2,43 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  background-image:url(../../img/LoginBGImage.jpg);
+  background-image:url(../../img/LoginBGImage_white.png);
   background-position: center;
   background-attachment: fixed;
   background-size:cover;
 }
 .page_roosterlist_box{
-  background-color: var(--ContentBGColor);
-  max-width: 100px;
+  background-color: #ddd;
+  max-width: 1000px;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 	margin: 0px auto;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.page_roosterlist_title{
+  background-color: #fff;
+  text-align: center;
+  font-size: 2em;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.roosterlist_empty{
+  padding: 40px;
+  text-align: center;
+}
+
+.rooster_itm{
+  background-color: #fff;
+  padding: 10px;
+  margin: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.rooster_itm:hover{
+  background-color: #f4f4f4;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }

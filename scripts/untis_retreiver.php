@@ -107,7 +107,7 @@
               array_push($row['history'], $rowHistory);
             }
           }
-          array_push($Departments, $row);
+          $Departments[$row['id']] = $row;
         }
       }
       return $Departments;
@@ -244,7 +244,7 @@
               array_push($row['history'], $rowHistory);
             }
           }
-          array_push($SchoolClasses, $row);
+          $SchoolClasses[$row['id']] = $row;
         }
       }
       return $SchoolClasses;

@@ -1,0 +1,121 @@
+.page_schedulebuilder_container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-image:url(../../img/LoginBGImage_white.png);
+  background-position: center;
+  background-attachment: fixed;
+  background-size:cover;
+}
+.page_schedulebuilder_box{
+  flex: 1 1 auto;     /* 1 */
+  min-width: 1px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;        /* 2 */
+
+  overflow-y: auto;
+  background-color: #ddd;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.page_schedulebuilder_title{
+  background-color: #fff;
+  text-align: center;
+  font-size: 2em;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.page_schedulebuilder_content{
+  flex-grow: 1;
+}
+
+.page_schedulebuilder_footer{
+  background-color: #fff;
+  box-shadow: 0px 8px 16px 8px rgba(0,0,0,0.2);
+  z-index: 999;
+  flex-shrink: 0;
+  display: flex;
+  max-height: 15%;
+}
+.schedulebuilder_footer_content{
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow-y: auto;
+}
+.schedulebuilder_footer_navigation{
+  flex-shrink: 0;
+  align-items: stretch;
+  display: flex;
+}
+.schedulebuilder_footer_navigation>button{
+  background-color: var(--Accent);
+}
+.schedulebuilder_footer_navigation>button:hover{
+  background-color: var(--AccentLight);
+}
+.schedulebuilder_footer_navigation>button:active{
+  background-color: var(--AccentDark);
+}
+.schedulebuilder_footer_itm{
+  margin: 2px;
+  padding: 5px;
+  background-color: #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.schedulebuilder_footer_itm:hover{
+  background-color: #bbb;
+}
+
+.schedulebuilder_itm{
+  margin: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.schedulebuilder_itm_header{
+  padding: 10px;
+  background-color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+.schedulebuilder_itm_header.disabled{
+  cursor: default;
+  background-color: #bbb;
+  color: #666;
+}
+
+.schedulebuilder_itm_header:hover{
+  background-color: #ddd;
+}
+
+.schedulebuilder_itm_header.disabled:hover{
+  background-color: #bbb;
+}
+
+.schedulebuilder_itm_content_container{
+  display: none;
+  overflow: none;
+}
+
+.schedulebuilder_itm_content_object{
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.schedulebuilder_itm_content_object:hover{
+  background-color: #eee;
+}
+.schedulebuilder_itm_content_object.selected{
+  background-color: #ddd;
+}

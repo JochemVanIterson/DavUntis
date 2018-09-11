@@ -13,6 +13,8 @@ function openPage(page){
     currentPage = new LoginPage(parent);
   } else if(page=="roosterlist"){
     currentPage = new RoosterListPage(parent);
+  } else if(page=="schedulebuilder"){
+    currentPage = new ScheduleBuilderPage(parent);
   } else if(page=="admin"){
     currentPage = new AdminPage(parent);
   }
