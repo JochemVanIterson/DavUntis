@@ -60,7 +60,7 @@
       window.package = $packageJson;
 		</script>";
 	?>
-	<title><?php echo $package['name']?> | Admin</title>
+	<title><?php echo $package['name']?></title>
 </head>
 <body>
   <div class='navbar'>
