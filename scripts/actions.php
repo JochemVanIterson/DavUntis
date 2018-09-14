@@ -84,6 +84,11 @@
       $ReturnData['schoolclasses'] = $UntisRetreiver->getSchoolClassesSQL();
       $ReturnData['dis_departments'] = json_decode($SQL->getSetting('dis_departments'));
       die(json_encode(array("page"=>$_POST['page'], "data"=>$ReturnData)));
+    } else
+    if($_POST['page']=='per'){
+      $ReturnData = array();
+      $ReturnData['raw'] = $UntisRetreiver->getSubjects(true, $UntisData);
+      die(json_encode(array("page"=>$_POST['page'], "data"=>$ReturnData)));
     }
     die(json_encode(array("error"=>"ScheduleBuilder action doesn't exist"), true));
   }
@@ -150,10 +155,18 @@
     die(json_encode(array("error"=>"page doesn't exist"), true));
   }
   if($_POST['action']=='updateDB'){ // ---------------------------------------- Update DB --------------------------------- //
-    $UntisData = new UntisData($UntisURL, $_COOKIE, $ini_array);
-    $ServerDepartments = $UntisData->Departments();
-    $response = $UntisRetreiver->insertDepartments($ServerDepartments);
-    die(json_encode($response));
+    $responseArray = array();
+
+    $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
+    // -------------------- Exclude unused department data from collection -------------------- //
+
+    $ServerSchoolClasses = $UntisData->SchoolClasses();
+    $responseArray['schoolclasses'] = $UntisRetreiver->insertSchoolClasses($ServerSchoolClasses);
+
+    $ServerSubjects = $UntisData->Subjects();
+    $responseArray['subjects'] = $UntisRetreiver->insertSubjects($ServerSubjects);
+
+    die(json_encode($responseArray));
   }
 
   // ---------------------------------------------------------------- SQL Actions ---------------------------------------------------------- //

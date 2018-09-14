@@ -1,10 +1,39 @@
 function ScheduleBuilderPage(parent){
   var self = this;
   self.parent = parent;
+
+  self.configured_data = {};
+  self.configured_data.schoolclasses = [];
+
   self.view = $(`
-    <div class='page_schedulebuilder_container'>
+    <div class='page_schedulebuilder_container'></div>`);
+  self.show = function(page='dep'){
+    console.log("show ScheduleBuilder");
+    self.parent.append(self.view);
+    self.show_page(page);
+  }
+  self.show_page = function(page='dep'){
+    self.parent.find('.page_schedulebuilder_container').empty();
+    console.log('page', page);
+    switch(page) {
+      case 'dep':
+        pageView = self.depPage();
+        break;
+      case 'per':
+        pageView = self.perPage();
+        break;
+    }
+    self.parent.find('.page_schedulebuilder_container').append(pageView);
+    self.getData(page);
+  }
+  self.unbind = function(){
+    console.log("unbind ScheduleBuilder");
+  }
+
+  self.depPage = function(){
+    view = $(`
       <div class='page_schedulebuilder_box'>
-        <div class='page_schedulebuilder_title'>Schedule Builder</div>
+        <div class='page_schedulebuilder_title'>Schedule Builder - Classes</div>
         <div class='page_schedulebuilder_content'></div>
       </div>
       <div class='page_schedulebuilder_footer'>
@@ -13,25 +42,38 @@ function ScheduleBuilderPage(parent){
           <button id='schedulebuilder_back'>Back</button>
           <button id='schedulebuilder_next'>Next</button>
         </div>
-      </div>
-    </div>`);
-  self.show = function(page='dep'){
-    console.log("show ScheduleBuilder");
-    switch (page) {
-      case 'dep':
-        pageView = self.depPage();
-        break;
-    }
-    self.view.append(pageView);
-    self.getData(page);
-    self.parent.append(self.view);
-  }
-  self.unbind = function(){
-    console.log("unbind ScheduleBuilder");
+      </div>`
+    );
+    view.find('button#schedulebuilder_back').addClass('disabled');
+    view.find('button#schedulebuilder_next').click(function(){
+      self.configured_data.schoolclasses = [];
+      found_elements = view.find('.schedulebuilder_footer_content>.schedulebuilder_footer_itm');
+      found_elements.each(function(){
+        id = parseInt($(this).attr('id').replace(/sc_/g,''));
+        self.configured_data.schoolclasses.push(id);
+      });
+      console.log('selectedClasses', self.configured_data.schoolclasses);
+      self.show_page('per');
+    });
+    return view;
   }
 
-  self.depPage = function(){
-    view = $(``);
+  self.perPage = function(){
+    view = $(`
+      <div class='page_schedulebuilder_box'>
+        <div class='page_schedulebuilder_title'>Schedule Builder - Periods</div>
+        <div class='page_schedulebuilder_content'></div>
+      </div>
+      <div class='page_schedulebuilder_footer'>
+        <div class='schedulebuilder_footer_content'></div>
+        <div class='schedulebuilder_footer_navigation'>
+          <button id='schedulebuilder_back'>Back</button>
+          <button id='schedulebuilder_next'>Next</button>
+        </div>
+      </div>`
+    );
+    view.find('button#schedulebuilder_back').click(function(){self.show_page('dep')});
+    view.find('button#schedulebuilder_next').addClass('disabled');
     return view;
   }
 
@@ -122,6 +164,9 @@ function ScheduleBuilderPage(parent){
           });
           $('.page_schedulebuilder_content').append(depView);
         });
+      } else
+      if(response.page=='per'){
+        $('.page_schedulebuilder_content').text(JSON.stringify(response.data));
       }
     });
   }

@@ -65,6 +65,11 @@
 .schedulebuilder_footer_navigation>button:active{
   background-color: var(--AccentDark);
 }
+.schedulebuilder_footer_navigation>button.disabled{
+  cursor: default;
+  background-color: #bbb;
+  color: #666;
+}
 .schedulebuilder_footer_itm{
   margin: 2px;
   padding: 5px;
