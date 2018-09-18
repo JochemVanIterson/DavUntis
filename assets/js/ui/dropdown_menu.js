@@ -1,26 +1,23 @@
-function init_dropdown_menu(objects){
+function init_dropdown_menu(){
   console.log("init_dropdown_menu");
   var x, i, j, selElmnt, a, b, c;
   /*look for any elements with the class "custom-select":*/
-  x = objects;//document.getElementsByClassName("custom-select");
+  x = document.getElementsByClassName("custom-select");
   for (i = 0; i < x.length; i++) {
     selElmnt = x[i].getElementsByTagName("select")[0];
     /*for each element, create a new DIV that will act as the selected item:*/
     a = document.createElement("DIV");
     a.setAttribute("class", "select-selected");
     a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
-    a.style.borderLeft = "8px solid "+selElmnt.options[selElmnt.selectedIndex].getAttribute("color");
-    a.style.borderColor = selElmnt.options[selElmnt.selectedIndex].getAttribute("color");
     x[i].appendChild(a);
     /*for each element, create a new DIV that will contain the option list:*/
     b = document.createElement("DIV");
     b.setAttribute("class", "select-items select-hide");
-    for (j = 1; j < selElmnt.length; j++) {
+    for (j = 0; j < selElmnt.length; j++) {
       /*for each option in the original select element,
       create a new DIV that will act as an option item:*/
       c = document.createElement("DIV");
       c.innerHTML = selElmnt.options[j].innerHTML;
-      c.style.borderLeft = "8px solid "+selElmnt.options[j].getAttribute("color");
       c.addEventListener("click", function(e) {
           /*when an item is clicked, update the original select box,
           and the selected item:*/
@@ -31,8 +28,6 @@ function init_dropdown_menu(objects){
             if (s.options[i].innerHTML == this.innerHTML) {
               s.selectedIndex = i;
               h.innerHTML = this.innerHTML;
-              h.style.borderLeft = this.style.borderLeft;
-              h.style.borderColor = this.style.borderLeftColor;
               y = this.parentNode.getElementsByClassName("same-as-selected");
               for (k = 0; k < y.length; k++) {
                 y[k].removeAttribute("class");
@@ -53,7 +48,7 @@ function init_dropdown_menu(objects){
         closeAllSelect(this);
         this.nextSibling.classList.toggle("select-hide");
         this.classList.toggle("select-arrow-active");
-    });
+      });
   }
 }
 function closeAllSelect(elmnt) {

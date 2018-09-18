@@ -13,7 +13,7 @@ class UntisData{
 	}
 
   function PageConfig($typeID){
-		$SessionIDHeader = array(
+    $SessionIDHeader = array(
 			'Host: '.$this->UntisURL,
 			'Referer: https://'.$this->UntisURL.'/WebUntis/index.do;jsessionid='.$this->JSESSIONID,
 			'Accept: application/json',
@@ -23,6 +23,20 @@ class UntisData{
 			'Cookie: schoolname='.$this->schoolname.'; JSESSIONID='.$this->JSESSIONID
 		);
 		$CurlResponse = $this->UntisCurl->GetDataCurl("/WebUntis/api/public/timetable/weekly/pageconfig?type=".$typeID, $SessionIDHeader, "");
+		return json_decode($CurlResponse['response'], true);
+	}
+
+  function TTData($ClassID, $date){
+	   $SessionIDHeader = array(
+			'Host: '.$this->UntisURL,
+			'Referer: https://'.$this->UntisURL.'/WebUntis/index.do;jsessionid='.$this->JSESSIONID,
+			'Accept: application/json',
+			'X-Requested-With: XMLHttpRequest',
+			'DNT:1',
+			'Cookie: schoolname='.$this->schoolname.'; JSESSIONID='.$this->JSESSIONID
+		);
+
+		$CurlResponse = $this->UntisCurl->GetDataCurl("/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=".$ClassID."&date=".$date, $SessionIDHeader, "");
 		return json_decode($CurlResponse['response'], true);
 	}
 
@@ -52,6 +66,11 @@ class UntisData{
 		);
 		$CurlResponse = $this->UntisCurl->GetDataCurl("/WebUntis/jsonrpc_web/jsonDepartmentService", $SessionIDHeader, json_encode($data));
 		return json_decode($CurlResponse['response'], true);
+	}
+
+  public function Periods($ClassID, $date){
+    $json = $this->TTData($ClassID, $date);
+		return $json['data']['result']['data']['elementPeriods'][$ClassID];
 	}
 
   public function Departments(){

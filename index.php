@@ -39,7 +39,6 @@
   <script type="text/javascript" src="assets/js/ui/dialog_large.js"></script>
   <script type="text/javascript" src="assets/js/ui/message.js"></script>
   <script type="text/javascript" src="assets/js/ui/login_dialog.js"></script>
-  <script type="text/javascript" src="assets/js/ui/spectrum.js"></script>
   <script type="text/javascript" src="assets/js/ui/dropdown_menu.js"></script>
 
   <?php // ----------------------------------------- Pages JS ----------------------------------------- //?>

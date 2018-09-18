@@ -147,6 +147,9 @@
       $UntisData = array();
       $UntisData['untis_url'] = $SQL->getSetting('untis_url');
       $UntisData['untis_school'] = $SQL->getSetting('untis_school');
+      $UntisData['untis_sync_before'] = $SQL->getSetting('untis_sync_before');
+      $UntisData['untis_sync_after'] = $SQL->getSetting('untis_sync_after');
+      $UntisData['untis_school'] = $SQL->getSetting('untis_school');
       $UntisData['dummyUsers'] = $SQL->getDummyUsers();
       $UntisData['departments'] = $UntisRetreiver->getDepartmentsSQL();
       $UntisData['dis_departments'] = $SQL->getSetting('dis_departments');
@@ -157,15 +160,33 @@
   if($_POST['action']=='updateDB'){ // ---------------------------------------- Update DB --------------------------------- //
     $responseArray = array();
 
-    $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
     // -------------------- Exclude unused department data from collection -------------------- //
-
+    $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
+    // -------------------------------------- SchoolClasses ----------------------------------- //
     $ServerSchoolClasses = $UntisData->SchoolClasses();
     $responseArray['schoolclasses'] = $UntisRetreiver->insertSchoolClasses($ServerSchoolClasses);
 
+    // -------------------------------------- Subjects ---------------------------------------- //
     $ServerSubjects = $UntisData->Subjects();
     $responseArray['subjects'] = $UntisRetreiver->insertSubjects($ServerSubjects);
 
+    // -------------------------------------- Periods ---------------------------------------- //
+    $sync_history = intval(str_replace('week ', '', $SQL->getSetting('untis_sync_before')))*-1;
+    $sync_future = intval(str_replace('week ', '', $SQL->getSetting('untis_sync_after')));
+
+    $schoolclass_ids = $UntisRetreiver->getSchoolClassIDsSQL();
+
+    $dates = array();
+    $ServerPeriods = array();
+    for($DateWalker = $sync_history; $DateWalker <= $sync_future; $DateWalker++) {
+      $date = date('Y-m-d', strtotime($DateWalker." week"));
+      foreach ($schoolclass_ids as $key => $id) {
+        $ServerPeriods = array_merge($ServerPeriods, $UntisData->Periods($id['id'], $date));
+      }
+      array_push($dates, $date);
+    }
+    $responseArray['dates'] = $dates;
+    $responseArray['periods'] = $UntisRetreiver->insertPeriods($ServerPeriods);
     die(json_encode($responseArray));
   }
 
@@ -205,6 +226,26 @@
         $response = $SQL->addSetting(array("key"=>"untis_school", "value"=>$_POST['fields']['untis_school']));
       } else {
         $response = $SQL->updateSetting(array("key"=>"untis_school", "value"=>$_POST['fields']['untis_school']));
+      }
+      if($response['status']!="success"){
+         die(json_encode($response));
+      }
+
+      // ----------------------------------- untis_sync_before ----------------------------------- //
+      if($SQL->getSetting('untis_sync_before')==null){
+        $response = $SQL->addSetting(array("key"=>"untis_sync_before", "value"=>$_POST['fields']['untis_sync_before']));
+      } else {
+        $response = $SQL->updateSetting(array("key"=>"untis_sync_before", "value"=>$_POST['fields']['untis_sync_before']));
+      }
+      if($response['status']!="success"){
+         die(json_encode($response));
+      }
+
+      // ----------------------------------- untis_sync_after ----------------------------------- //
+      if($SQL->getSetting('untis_sync_after')==null){
+        $response = $SQL->addSetting(array("key"=>"untis_sync_after", "value"=>$_POST['fields']['untis_sync_after']));
+      } else {
+        $response = $SQL->updateSetting(array("key"=>"untis_sync_after", "value"=>$_POST['fields']['untis_sync_after']));
       }
       if($response['status']!="success"){
          die(json_encode($response));

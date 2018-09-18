@@ -73,6 +73,8 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['label'] = mysqli_real_escape_string($this->connection, $SqlOldData['label']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_Department_History = "INSERT INTO $prefixDepartmentsHis (itm_id, name, label, last_update, hash, status)
@@ -96,6 +98,8 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['label'] = mysqli_real_escape_string($this->connection, $SqlOldData['label']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_Department_History = "INSERT INTO $prefixDepartmentsHis (itm_id, name, label, last_update, hash, status)
@@ -237,6 +241,10 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['dids'] = mysqli_real_escape_string($this->connection, $SqlOldData['dids']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_SchoolClass_History = "INSERT INTO $prefixSchoolClassesHis (itm_id, name, longname, displayname, dids, last_update, hash, status)
@@ -260,6 +268,10 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['dids'] = mysqli_real_escape_string($this->connection, $SqlOldData['dids']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_SchoolClass_History = "INSERT INTO $prefixSchoolClassesHis (itm_id, name, longname, displayname, dids, last_update, hash, status)
@@ -323,6 +335,20 @@
         return $row;
       }
       return null;
+    }
+    public function getSchoolClassIDsSQL(){
+      $prefixSchoolClasses = $this->ini_array['msql_prefix']."SchoolClasses";
+      $prefixSchoolClassesHis = $this->ini_array['msql_prefix']."SchoolClasses_his";
+
+      $sqlq_Get = "SELECT id from $prefixSchoolClasses ORDER BY name";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      $SchoolClasses = array();
+      if (mysqli_num_rows($sql_Get) > 0) {
+        while($row = mysqli_fetch_assoc($sql_Get)) {
+          $SchoolClasses[$row['id']] = $row;
+        }
+      }
+      return $SchoolClasses;
     }
 
     public function getSubjects($fresh, $UntisData){
@@ -399,6 +425,10 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longname']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['alternatename'] = mysqli_real_escape_string($this->connection, $SqlOldData['alternatename']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_Subject_History = "INSERT INTO $prefixSubjectsHis (itm_id, name, longname, displayname, alternatename, last_update, hash, status)
@@ -422,6 +452,10 @@
           $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longname']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['alternatename'] = mysqli_real_escape_string($this->connection, $SqlOldData['alternatename']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
             array_push($changedIDs, $id);
             $sqlq_Insert_Subject_History = "INSERT INTO $prefixSubjectsHis (itm_id, name, longname, displayname, alternatename, last_update, hash, status)
@@ -444,7 +478,241 @@
         "removed"=>$removedIDs
       ));
     }
-    public function getSubjectsSQL(){}
-    public function getSingleSubject($id){}
+    public function getSubjectsSQL(){
+      $prefixSubjects = $this->ini_array['msql_prefix']."Subjects";
+      $prefixSubjectsHis = $this->ini_array['msql_prefix']."Subjects_his";
+
+      $sqlq_Get = "SELECT * from $prefixSubjects ORDER BY name";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      $Subjects = array();
+      if (mysqli_num_rows($sql_Get) > 0) {
+        while($row = mysqli_fetch_assoc($sql_Get)) {
+          $sqlq_GetHistory = "SELECT * from $prefixSubjectsHis WHERE itm_id=$row[id]";
+          $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+          $row['history'] = array();
+          if (mysqli_num_rows($sql_GetHistory) > 0) {
+            while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+              array_push($row['history'], $rowHistory);
+            }
+          }
+          $Subjects[$row['id']] = $row;
+        }
+      }
+      return $Subjects;
+    }
+    public function getSingleSubject($id){
+      $prefixSubjects = $this->ini_array['msql_prefix']."Subjects";
+      $prefixSubjectsHis = $this->ini_array['msql_prefix']."Subjects_his";
+
+      $sqlq_Get = "SELECT * from $prefixSubjects WHERE id=$id";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      if (mysqli_num_rows($sql_Get) > 0) {
+        $row = mysqli_fetch_assoc($sql_Get);
+        $sqlq_GetHistory = "SELECT * from $prefixSubjectsHis WHERE itm_id=$id";
+        $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+        $row['history'] = array();
+        if (mysqli_num_rows($sql_GetHistory) > 0) {
+          while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+            array_push($row['history'], $rowHistory);
+          }
+        }
+        return $row;
+      }
+      return null;
+    }
+
+    public function getPeriods($fresh, $UntisData){
+      if($fresh){
+        $ServerPeriods = $UntisData->Periods();
+        $response = $this->insertPeriods($ServerPeriods);
+        if($response['success']=true){
+          $data = $this->getPeriodsSQL();
+          return json_encode($data, true);
+        } else {
+          return json_encode($response, true);
+        }
+      } else {
+        $data = $this->getPeriodsSQL();
+        return json_encode($data, true);
+      }
+    }
+    public function insertPeriods($data){
+      $prefixPeriods = $this->ini_array['msql_prefix']."Periods";
+      $prefixPeriodsHis = $this->ini_array['msql_prefix']."Periods_his";
+
+      $sqlq_ids = "SELECT id from $prefixPeriods";
+      $sql_ids = mysqli_query($this->connection, $sqlq_ids);
+      $oldIDs = array();
+      if (mysqli_num_rows($sql_ids) > 0) {
+        while($row = mysqli_fetch_assoc($sql_ids)) {
+          array_push($oldIDs, $row['id']);
+        }
+      }
+
+      $insertedIDs = array();
+      $changedIDs = array();
+      $newIDs = array();
+      foreach ($data as $PeriodObject) {
+        $id = $PeriodObject['id'];
+        $lesson_id = $PeriodObject['lessonId'];
+        $lesson_number = $PeriodObject['lessonNumber'];
+        $lesson_code = mysqli_real_escape_string($this->connection, $PeriodObject['lessonCode']);
+        $lesson_text = mysqli_real_escape_string($this->connection, $PeriodObject['lessonText']);
+        $period_text = mysqli_real_escape_string($this->connection, $PeriodObject['periodText']);
+        $has_period_text = $PeriodObject['hasPeriodText']?1:0;
+        $dateRaw = date_create_from_format('Ymd', $PeriodObject['date']);
+        $date = date_format($dateRaw, 'Y-m-d')." 00:00:00";
+
+        if($PeriodObject['startTime']<1000)$PeriodObject['startTime'] = "0".$PeriodObject['startTime'];
+        $start_timeRaw = date_create_from_format('Hi', $PeriodObject['startTime']);
+        $start_time = date_format($dateRaw, 'Y-m-d')." ".date_format($start_timeRaw, 'H:i:s');
+
+        if($PeriodObject['endTime']<1000)$PeriodObject['startTime'] = "0".$PeriodObject['endTime'];
+        $end_timeRaw = date_create_from_format('Hi', $PeriodObject['endTime']);
+        $end_time = date_format($dateRaw, 'Y-m-d')." ".date_format($end_timeRaw, 'H:i:s');
+
+        $date = mysqli_real_escape_string($this->connection, $date);
+        $start_time = mysqli_real_escape_string($this->connection, $start_time);
+        $end_time = mysqli_real_escape_string($this->connection, $end_time);
+
+        if(array_key_exists("studentGroup",$PeriodObject))$student_group = mysqli_real_escape_string($this->connection, $PeriodObject['studentGroup']);
+        else $student_group="";
+        $has_info = $PeriodObject['hasInfo']?1:0;
+        $code = $PeriodObject['code'];
+        $cell_state = mysqli_real_escape_string($this->connection, $PeriodObject['cellState']);
+        $priority = $PeriodObject['priority'];
+
+        $schoolclasses = array();
+        $teachers = array();
+        $subjects = array();
+        $rooms = array();
+        foreach ($PeriodObject['elements'] as $key => $element) {
+          if($element['type']==1){
+            array_push($schoolclasses, $element['id']);
+          } else if($element['type']==2){
+            array_push($teachers, $element['id']);
+          } else if($element['type']==3){
+            array_push($subjects, $element['id']);
+          } else if($element['type']==4){
+            array_push($rooms, $element['id']);
+          }
+        }
+        $schoolclasses = mysqli_real_escape_string($this->connection, json_encode($schoolclasses, true));
+        $teachers = mysqli_real_escape_string($this->connection, json_encode($teachers, true));
+        $subjects = mysqli_real_escape_string($this->connection, json_encode($subjects, true));
+        $rooms = mysqli_real_escape_string($this->connection, json_encode($rooms, true));
+
+        unset($PeriodObject['roomCapacity']);
+        unset($PeriodObject['studentCount']);
+
+        $hash = md5(json_encode($PeriodObject, true));
+
+        array_push($newIDs, $id);
+
+        $sqlq_check = "SELECT * from $prefixPeriods WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+        if(mysqli_num_rows($sql_check) == 0){
+          // ------------------------------------------- Insert Database --------------------------------------------- //
+          $sqlq_Insert_Period = "INSERT INTO $prefixPeriods (
+            id, lesson_id, lesson_number, lesson_code, lesson_text, period_text, has_period_text, date, start_time, end_time, student_group, has_info, code, cell_state, priority, schoolclasses, teachers, subjects, rooms, last_update, hash
+          ) VALUES (
+            $id, $lesson_id, $lesson_number, '$lesson_code', '$lesson_text', '$period_text', $has_period_text, '$date', '$start_time', '$end_time', '$student_group', $has_info, $code, '$cell_state', $priority, '$schoolclasses', '$teachers', '$subjects', '$rooms', NOW(), '$hash'
+          )";
+          array_push($insertedIDs, $id);
+          if (!mysqli_query($this->connection, $sqlq_Insert_Period)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Period, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+          $sqlq_Insert_Period_History = "INSERT INTO $prefixPeriodsHis (
+            itm_id, lesson_id, lesson_number, lesson_code, lesson_text, period_text, has_period_text, date, start_time, end_time, student_group, has_info, code, cell_state, priority, schoolclasses, teachers, subjects, rooms, last_update, hash, status
+          ) VALUES (
+            $id, $lesson_id, $lesson_number, '$lesson_code', '$lesson_text', '$period_text', $has_period_text, '$date', '$start_time', '$end_time', '$student_group', $has_info, $code, '$cell_state', $priority, '$schoolclasses', '$teachers', '$subjects', '$rooms', NOW(), '$hash', 'INSERT'
+          )";
+          if (!mysqli_query($this->connection, $sqlq_Insert_Period_History)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Period_History, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+        } else {
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['lesson_code'] = mysqli_real_escape_string($this->connection, $SqlOldData['lesson_code']);
+            $SqlOldData['lesson_text'] = mysqli_real_escape_string($this->connection, $SqlOldData['lesson_text']);
+            $SqlOldData['period_text'] = mysqli_real_escape_string($this->connection, $SqlOldData['period_text']);
+            $SqlOldData['date'] = mysqli_real_escape_string($this->connection, $SqlOldData['date']);
+            $SqlOldData['start_time'] = mysqli_real_escape_string($this->connection, $SqlOldData['start_time']);
+            $SqlOldData['end_time'] = mysqli_real_escape_string($this->connection, $SqlOldData['end_time']);
+            $SqlOldData['student_group'] = mysqli_real_escape_string($this->connection, $SqlOldData['student_group']);
+            $SqlOldData['cell_state'] = mysqli_real_escape_string($this->connection, $SqlOldData['cell_state']);
+            $SqlOldData['schoolclasses'] = mysqli_real_escape_string($this->connection, $SqlOldData['schoolclasses']);
+            $SqlOldData['teachers'] = mysqli_real_escape_string($this->connection, $SqlOldData['teachers']);
+            $SqlOldData['subjects'] = mysqli_real_escape_string($this->connection, $SqlOldData['subjects']);
+            $SqlOldData['rooms'] = mysqli_real_escape_string($this->connection, $SqlOldData['rooms']);
+            $SqlOldData['last_update'] = mysqli_real_escape_string($this->connection, $SqlOldData['last_update']);
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Period_History = "INSERT INTO $prefixPeriodsHis (
+              itm_id, lesson_id, lesson_number, lesson_code, lesson_text, period_text, has_period_text, date, start_time, end_time, student_group, has_info, code, cell_state, priority, schoolclasses, teachers, subjects, rooms, last_update, hash, status
+            ) VALUES (
+              $SqlOldData[id], $SqlOldData[lesson_id], $SqlOldData[lesson_number], '$SqlOldData[lesson_code]', '$SqlOldData[lesson_text]', '$SqlOldData[period_text]', $SqlOldData[has_period_text], '$SqlOldData[date]', '$SqlOldData[start_time]', '$SqlOldData[end_time]', '$SqlOldData[student_group]', $SqlOldData[has_info], $SqlOldData[code], '$SqlOldData[cell_state]', $SqlOldData[priority], '$SqlOldData[schoolclasses]', '$SqlOldData[teachers]', '$SqlOldData[subjects]', '$SqlOldData[rooms]', '$SqlOldData[last_update]', '$SqlOldData[hash]', 'UPDATE'
+            )";
+            if (!mysqli_query($this->connection, $sqlq_Insert_Period_History)) {
+              return array("status"=>"failed", "query"=>$sqlq_Insert_Period_History, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Update_Period = "UPDATE $prefixPeriods SET
+              lesson_id=$lesson_id, lesson_number=$lesson_number, lesson_code='$lesson_code', lesson_text='$lesson_text', period_text='$period_text', has_period_text=$has_period_text, date='$date', start_time='$start_time', end_time='$end_time', student_group='$student_group', has_info=$has_info, code=$code, cell_state='$cell_state', priority=$priority, schoolclasses='$schoolclasses', teachers='$teachers', subjects='$subjects', rooms='$rooms', last_update=NOW(), hash='$hash'
+            WHERE id=$id";
+            if (!mysqli_query($this->connection, $sqlq_Update_Period)) {
+              return array("status"=>"failed", "query"=>$sqlq_Update_Period, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+          }
+        }
+      }
+      $removedIDs = array_values(array_diff($oldIDs, $newIDs));
+      foreach($removedIDs as $id) {
+        $sqlq_check = "SELECT * from $prefixPeriods WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+    		if(mysqli_num_rows($sql_check) > 0){
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['lesson_code'] = mysqli_real_escape_string($this->connection, $SqlOldData['lesson_code']);
+            $SqlOldData['lesson_text'] = mysqli_real_escape_string($this->connection, $SqlOldData['lesson_text']);
+            $SqlOldData['period_text'] = mysqli_real_escape_string($this->connection, $SqlOldData['period_text']);
+            $SqlOldData['date'] = mysqli_real_escape_string($this->connection, $SqlOldData['date']);
+            $SqlOldData['start_time'] = mysqli_real_escape_string($this->connection, $SqlOldData['start_time']);
+            $SqlOldData['end_time'] = mysqli_real_escape_string($this->connection, $SqlOldData['end_time']);
+            $SqlOldData['student_group'] = mysqli_real_escape_string($this->connection, $SqlOldData['student_group']);
+            $SqlOldData['cell_state'] = mysqli_real_escape_string($this->connection, $SqlOldData['cell_state']);
+            $SqlOldData['schoolclasses'] = mysqli_real_escape_string($this->connection, $SqlOldData['schoolclasses']);
+            $SqlOldData['teachers'] = mysqli_real_escape_string($this->connection, $SqlOldData['teachers']);
+            $SqlOldData['subjects'] = mysqli_real_escape_string($this->connection, $SqlOldData['subjects']);
+            $SqlOldData['rooms'] = mysqli_real_escape_string($this->connection, $SqlOldData['rooms']);
+            $SqlOldData['last_update'] = mysqli_real_escape_string($this->connection, $SqlOldData['last_update']);
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Period_History = "INSERT INTO $prefixPeriodsHis (
+              itm_id, lesson_id, lesson_number, lesson_code, lesson_text, period_text, has_period_text, date, start_time, end_time, student_group, has_info, code, cell_state, priority, schoolclasses, teachers, subjects, rooms, last_update, hash, status
+            ) VALUES ($SqlOldData[id], $SqlOldData[lesson_id], $SqlOldData[lesson_number], '$SqlOldData[lesson_code]', '$SqlOldData[lesson_text]', '$SqlOldData[period_text]', $SqlOldData[has_period_text], '$SqlOldData[date]', '$SqlOldData[start_time]', '$SqlOldData[end_time]', '$SqlOldData[student_group]', $SqlOldData[has_info], $SqlOldData[code], '$SqlOldData[cell_state]', $SqlOldData[priority], '$SqlOldData[schoolclasses]', '$SqlOldData[teachers]', '$SqlOldData[subjects]', '$SqlOldData[rooms]', '$SqlOldData[last_update]', '$SqlOldData[hash]', 'REMOVED'
+            )";
+        		if (!mysqli_query($this->connection, $sqlq_Insert_Period_History)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Insert_Period_History, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Remove_Period = "DELETE FROM $prefixPeriods WHERE id=$id";
+        		if (!mysqli_query($this->connection, $sqlq_Remove_Period)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Remove_Period, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+          }
+        }
+      }
+      return array("status"=>"success", "changes"=>array(
+        "old"=>$oldIDs,
+        "inserted"=>$insertedIDs,
+        "changed"=>$changedIDs,
+        "removed"=>$removedIDs
+      ));
+    }
+    public function getPeriodsSQL(){}
+    public function getSinglePeriod($id){}
   }
 ?>
