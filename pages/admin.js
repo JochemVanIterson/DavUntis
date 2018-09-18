@@ -25,7 +25,13 @@ function AdminPage(parent){
           <tr class='admin_selector_itm' id='Untis'>
     				<td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_untis.svg' alt='Untis'></td>
     				<td class='selector_text'>
-    					Untis
+    					Untis Settings
+    				</td>
+    			</tr>
+          <tr class='admin_selector_itm' id='Database'>
+    				<td class='selector_icon'><object type='image/svg+xml' data='assets/img/icon_database.svg' alt='Database'></td>
+    				<td class='selector_text'>
+    					Database
     				</td>
     			</tr>
           <tr class='admin_selector_itm' id='System'>
@@ -88,7 +94,6 @@ function AdminPage(parent){
   self.show = function(page='Dash', sortmode=null){
     $('#openAdmin').text("Back");
     self.view.find('.admin_page').empty();
-    $('.sp-container').remove(); // Remove the color chooser dialogs
 
     pageView = null;
     switch(page){
@@ -100,6 +105,9 @@ function AdminPage(parent){
         break;
       case 'Untis':
         pageView = self.pageUntis();
+        break;
+      case 'Database':
+        pageView = self.pageDatabase();
         break;
       case 'System':
         pageView = self.pageSystem();
@@ -256,16 +264,22 @@ function AdminPage(parent){
       if(response.page=="Untis"){ // ---------------------------------------------- PageData Untis ---------------------------------------------- //
         console.log('pagedata', response.data);
         response.data.dis_departments = JSON.parse(response.data.dis_departments);
+        $('#untis_url').attr('placeholder', 'empty');
         if(response.data.untis_url!=null){
           $('#untis_url').val(response.data.untis_url);
-        } else {
-          $('#untis_url').attr('placeholder', 'empty');
         }
 
+        $('#untis_school').attr('placeholder', 'empty');
         if(response.data.untis_school!=null){
           $('#untis_school').val(response.data.untis_school);
-        } else {
-          $('#untis_school').attr('placeholder', 'empty');
+        }
+
+        if(response.data.untis_sync_before!=null){
+          $('select#untis_sync_before').val(response.data.untis_sync_before.replace(/ /g,'_'));
+        }
+
+        if(response.data.untis_sync_after!=null){
+          $('select#untis_sync_after').val(response.data.untis_sync_after.replace(/ /g,'_'));
         }
 
         response.data.dummyUsers.forEach(function(DummyUserObject){
@@ -318,6 +332,9 @@ function AdminPage(parent){
         });
         console.log(response.data);
       }
+      if(response.page=="Database"){
+
+      }
     });
   }
   self.unbind = function(){
@@ -332,7 +349,7 @@ function AdminPage(parent){
       TODO:
         <ul>
           <li>Dashboard page</li>
-          <li>Users page</li>
+          <li>Database page</li>
           <li>System page</li>
         </ul>
     </div>`);
@@ -441,6 +458,39 @@ function AdminPage(parent){
             <td>Schoolname</td>
             <td><input id='untis_school'></td>
           </tr>
+          <tr>
+            <td>Sync before</td>
+            <td>
+              <select id='untis_sync_before' class='custom-select'>
+                <option selected disabled>Select</option>
+                <option value='1_week'>1 week</option>
+                <option value='2_week'>2 weeks</option>
+                <option value='3_week'>3 weeks</option>
+                <option value='4_week'>1 month</option>
+                <option value='6_week'>1.5 month</option>
+                <option value='8_week'>2 months</option>
+                <option value='10_week'>2.5 months</option>
+                <option value='12_week'>3 months</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Sync after</td>
+            <td>
+              <select id='untis_sync_after' class='custom-select'>
+                <option selected disabled>Select</option>
+                <option selected disabled>Select</option>
+                <option value='1_week'>1 week</option>
+                <option value='2_week'>2 weeks</option>
+                <option value='3_week'>3 weeks</option>
+                <option value='4_week'>1 month</option>
+                <option value='6_week'>1.5 month</option>
+                <option value='8_week'>2 months</option>
+                <option value='10_week'>2.5 months</option>
+                <option value='12_week'>3 months</option>
+              </select>
+            </td>
+          </tr>
           <tr id='actions'>
             <td colspan=2>
               <button id='saveUntisSetup' class='saveButton'>Save</button>
@@ -475,7 +525,6 @@ function AdminPage(parent){
           <button id='saveDepartmentSelectors' class='saveButton'>Save</button>
         </div>
       </div>
-      <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
     newcounter = 0;
     view.find('#addDummyUser').click(function(){
@@ -491,7 +540,9 @@ function AdminPage(parent){
         sql_action: 'update',
         fields: {
           untis_url: view.find('input#untis_url').val(),
-          untis_school: view.find('input#untis_school').val()
+          untis_school: view.find('input#untis_school').val(),
+          untis_sync_before: view.find('select#untis_sync_before').val().replace(/_/g,' '),
+          untis_sync_after: view.find('select#untis_sync_after').val().replace(/_/g,' ')
         }
       },
       function(data, status){
@@ -503,15 +554,6 @@ function AdminPage(parent){
           });
           SuccessDialog.show();
         }
-      });
-    });
-    view.find('#UpdateDbButton').click(function(){
-      $.post('scripts/actions.php',{
-        action: 'updateDB',
-      },
-      function(data, status){
-        data = JSON.parse(data);
-        console.log('updateDB', data);
       });
     });
     view.find('#saveUntisDummy').click(function(){
@@ -567,6 +609,36 @@ function AdminPage(parent){
           });
           SuccessDialog.show();
         }
+      });
+    });
+    return view;
+  }
+  self.pageDatabase = function(){ // ------------------------------------------------ Page System ------------------------------------------------- //
+    view = $(`<div>Database
+      TODO:
+        <ul>
+          <li>Global UI</li>
+          <li>Global sync button</li>
+          <li>
+            Sync button per type <ul>
+              <li>departments</li>
+              <li>classes</li>
+              <li>subjects</li>
+              <li>periods</li>
+              <li>etc.</li>
+            </ul>
+          </li>
+          <li>Info about data</li>
+        </ul><br>
+      <button id='UpdateDbButton' class='button'>Update DB</button>
+    </div>`);
+    view.find('#UpdateDbButton').click(function(){
+      $.post('scripts/actions.php',{
+        action: 'updateDB',
+      },
+      function(data, status){
+        data = JSON.parse(data);
+        console.log('updateDB', data);
       });
     });
     return view;
