@@ -17,33 +17,26 @@
 
   $UntisURL = $SQL->getSetting('untis_url');
   $UntisSchool = $SQL->getSetting('untis_school');
+  $PrivateKey = $ini_array['PrivateKey'];
 
-  $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
-  $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
   // ---------------------------------------------------------------- UNTIS ---------------------------------------------------------------- //
   if($_POST['action']=='untis_login'){
+    $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
+    $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
     $data = $_POST['data'];
     $LoginDone = $UntisLogin->Login($UntisSchool, $data['username'], $data['password']);
     die(json_encode($LoginDone));
   }
-  $PrivateKey = $ini_array['PrivateKey'];
-  $DummyUsers = $SQL->getDummyUsers(true);
-  $RandomDummyUser = $DummyUsers[rand(0, sizeof($DummyUsers)-1)];
-  $RandomDummyUser['password'] = Encryption::decrypt($PrivateKey, $RandomDummyUser['iv'], $RandomDummyUser['password']);
-  $LoginDone = $UntisLogin->Login($UntisSchool, $RandomDummyUser['username'], $RandomDummyUser['password']);
-
-  $sessionData = $LoginDone['data'];
-  $UntisData = new UntisData($UntisURL, $sessionData, $ini_array);
 
   // ---------------------------------------------------------------- DATA ----------------------------------------------------------------- //
   if($_POST['action']=='untis_departments'){
     $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
-    $data = $UntisRetreiver->getDepartments($fresh, $UntisData);
+    $data = json_encode($UntisRetreiver->getDepartmentsSQL(), true);
     die($data);
   }
   if($_POST['action']=='untis_school_classes'){
     $fresh = isset($_POST['fresh']) && $_POST['fresh']=='true';
-    $data = $UntisRetreiver->getSchoolClasses($fresh, $UntisData);
+    $data = json_encode($UntisRetreiver->getSchoolClassesSQL(), true);
     die($data);
   }
 
@@ -87,7 +80,7 @@
     } else
     if($_POST['page']=='per'){
       $ReturnData = array();
-      $ReturnData['raw'] = $UntisRetreiver->getSubjects(true, $UntisData);
+      $ReturnData['raw'] = json_encode($UntisRetreiver->getSubjectsSQL(), true);
       die(json_encode(array("page"=>$_POST['page'], "data"=>$ReturnData)));
     }
     die(json_encode(array("error"=>"ScheduleBuilder action doesn't exist"), true));
@@ -144,21 +137,31 @@
       die(json_encode(array("page"=>$_POST['page'], "data"=>$UserData)));
     }
     if($_POST['page']=='Untis'){ // -------------------------- Untis -------------------------- //
-      $UntisData = array();
-      $UntisData['untis_url'] = $SQL->getSetting('untis_url');
-      $UntisData['untis_school'] = $SQL->getSetting('untis_school');
-      $UntisData['untis_sync_before'] = $SQL->getSetting('untis_sync_before');
-      $UntisData['untis_sync_after'] = $SQL->getSetting('untis_sync_after');
-      $UntisData['untis_school'] = $SQL->getSetting('untis_school');
-      $UntisData['dummyUsers'] = $SQL->getDummyUsers();
-      $UntisData['departments'] = $UntisRetreiver->getDepartmentsSQL();
-      $UntisData['dis_departments'] = $SQL->getSetting('dis_departments');
-      die(json_encode(array("page"=>$_POST['page'], "data"=>$UntisData)));
+      $UntisReturnData = array();
+      $UntisReturnData['untis_url'] = $SQL->getSetting('untis_url');
+      $UntisReturnData['untis_school'] = $SQL->getSetting('untis_school');
+      $UntisReturnData['untis_sync_before'] = $SQL->getSetting('untis_sync_before');
+      $UntisReturnData['untis_sync_after'] = $SQL->getSetting('untis_sync_after');
+      $UntisReturnData['untis_school'] = $SQL->getSetting('untis_school');
+      $UntisReturnData['dummyUsers'] = $SQL->getDummyUsers();
+      $UntisReturnData['departments'] = $UntisRetreiver->getDepartmentsSQL();
+      $UntisReturnData['dis_departments'] = $SQL->getSetting('dis_departments');
+      die(json_encode(array("page"=>$_POST['page'], "data"=>$UntisReturnData)));
     }
     die(json_encode(array("error"=>"page doesn't exist"), true));
   }
   if($_POST['action']=='updateDB'){ // ---------------------------------------- Update DB --------------------------------- //
     $responseArray = array();
+
+    // -------------------------------------- Login to Untis ---------------------------------- //
+    $UntisLogin = new UntisLogin($UntisURL, $_COOKIE, $ini_array);
+    $UntisLogin->GetSessionIDData((isset($_COOKIE["school"])) ? $_COOKIE["school"] : $UntisSchool);
+    $DummyUsers = $SQL->getDummyUsers(true);
+    $RandomDummyUser = $DummyUsers[rand(0, sizeof($DummyUsers)-1)];
+    $RandomDummyUser['password'] = Encryption::decrypt($PrivateKey, $RandomDummyUser['iv'], $RandomDummyUser['password']);
+    $LoginDone = $UntisLogin->Login($UntisSchool, $RandomDummyUser['username'], $RandomDummyUser['password']);
+    $sessionData = $LoginDone['data'];
+    $UntisData = new UntisData($UntisURL, $sessionData, $ini_array);
 
     // -------------------- Exclude unused department data from collection -------------------- //
     $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
