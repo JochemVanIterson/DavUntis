@@ -165,13 +165,22 @@
 
     // -------------------- Exclude unused department data from collection -------------------- //
     $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
+
     // -------------------------------------- SchoolClasses ----------------------------------- //
     $ServerSchoolClasses = $UntisData->SchoolClasses();
     $responseArray['schoolclasses'] = $UntisRetreiver->insertSchoolClasses($ServerSchoolClasses);
 
+    // -------------------------------------- Teachers ---------------------------------------- //
+    $ServerTeachers = $UntisData->Teachers();
+    $responseArray['teachers'] = $UntisRetreiver->insertTeachers($ServerTeachers);
+
     // -------------------------------------- Subjects ---------------------------------------- //
     $ServerSubjects = $UntisData->Subjects();
     $responseArray['subjects'] = $UntisRetreiver->insertSubjects($ServerSubjects);
+
+    // -------------------------------------- Rooms ------------------------------------------- //
+    $ServerRooms = $UntisData->Rooms();
+    $responseArray['rooms'] = $UntisRetreiver->insertRooms($ServerRooms);
 
     // -------------------------------------- Periods ---------------------------------------- //
     $sync_history = intval(str_replace('week ', '', $SQL->getSetting('untis_sync_before')))*-1;

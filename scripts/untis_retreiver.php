@@ -320,6 +320,164 @@
       return $SchoolClasses;
     }
 
+    public function insertTeachers($data){
+      $prefixTeachers = $this->ini_array['msql_prefix']."Teachers";
+      $prefixTeachersHis = $this->ini_array['msql_prefix']."Teachers_his";
+
+      $sqlq_ids = "SELECT id from $prefixTeachers";
+      $sql_ids = mysqli_query($this->connection, $sqlq_ids);
+      $oldIDs = array();
+      if (mysqli_num_rows($sql_ids) > 0) {
+        while($row = mysqli_fetch_assoc($sql_ids)) {
+          array_push($oldIDs, $row['id']);
+        }
+      }
+
+      $insertedIDs = array();
+      $changedIDs = array();
+      $newIDs = array();
+      foreach ($data as $TeacherObject) {
+        $id = $TeacherObject['id'];
+        $name = mysqli_real_escape_string($this->connection, $TeacherObject['name']);
+        $forename = mysqli_real_escape_string($this->connection, $TeacherObject['forename']);
+        $longName = mysqli_real_escape_string($this->connection, $TeacherObject['longName']);
+        $displayname = mysqli_real_escape_string($this->connection, $TeacherObject['displayname']);
+        $didsArray = $TeacherObject['dids'];
+        $dids = mysqli_real_escape_string($this->connection, json_encode($didsArray, true));
+
+        unset($TeacherObject['externKey']);
+        unset($TeacherObject['klasseId']);
+        unset($TeacherObject['klasseOrStudentgroupId']);
+        unset($TeacherObject['title']);
+        unset($TeacherObject['alternatename']);
+        unset($TeacherObject['classteacher']);
+        unset($TeacherObject['classteacher2']);
+        unset($TeacherObject['buildingId']);
+        unset($TeacherObject['restypeId']);
+        unset($TeacherObject['can']);
+        unset($TeacherObject['capacity']);
+
+        $hash = md5(json_encode($TeacherObject, true));
+
+        array_push($newIDs, $id);
+
+        $sqlq_check = "SELECT * from $prefixTeachers WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+        if(mysqli_num_rows($sql_check) == 0){
+          // ------------------------------------------- Insert Database --------------------------------------------- //
+          $sqlq_Insert_Teacher = "INSERT INTO $prefixTeachers (id, name, forename, longname, displayname, dids, last_update, hash)
+          VALUES ($id, '$name', '$forename', '$longName', '$displayname', '$dids', NOW(), '$hash')";
+          array_push($insertedIDs, $id);
+          if (!mysqli_query($this->connection, $sqlq_Insert_Teacher)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Teacher, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+          $sqlq_Insert_Teacher_History = "INSERT INTO $prefixTeachersHis (itm_id, name, forename, longname, displayname, dids, last_update, hash, status)
+          VALUES ($id, '$name', '$forename', '$longName', '$displayname', '$dids', NOW(), '$hash', 'INSERT')";
+          if (!mysqli_query($this->connection, $sqlq_Insert_Teacher_History)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Teacher_History, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+        } else {
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['forename'] = mysqli_real_escape_string($this->connection, $SqlOldData['forename']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['dids'] = mysqli_real_escape_string($this->connection, $SqlOldData['dids']);
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Teacher_History = "INSERT INTO $prefixTeachersHis (itm_id, name, forename, longname, displayname, dids, last_update, hash, status)
+            VALUES ($SqlOldData[id], '$SqlOldData[name]', '$SqlOldData[forename]', '$SqlOldData[longname]', '$SqlOldData[displayname]', '$SqlOldData[dids]', '$SqlOldData[last_update]', '$SqlOldData[hash]', 'UPDATE')";
+            if (!mysqli_query($this->connection, $sqlq_Insert_Teacher_History)) {
+              return array("status"=>"failed", "query"=>$sqlq_Insert_Teacher_History, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Update_Teacher = "UPDATE $prefixTeachers SET name='$name', forename='$forename', longname='$longName', displayname='$displayname', dids='$dids', last_update=NOW(), hash='$hash' WHERE id=$id";
+            if (!mysqli_query($this->connection, $sqlq_Update_Teacher)) {
+              return array("status"=>"failed", "query"=>$sqlq_Update_Teacher, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+          }
+        }
+      }
+      $removedIDs = array_values(array_diff($oldIDs, $newIDs));
+      foreach($removedIDs as $id) {
+        $sqlq_check = "SELECT * from $prefixTeachers WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+    		if(mysqli_num_rows($sql_check) > 0){
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['forename'] = mysqli_real_escape_string($this->connection, $SqlOldData['forename']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['dids'] = mysqli_real_escape_string($this->connection, $SqlOldData['dids']);
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Teacher_History = "INSERT INTO $prefixTeachersHis (itm_id, name, forename, longname, displayname, dids, last_update, hash, status)
+        		VALUES ($SqlOldData[id], '$SqlOldData[name]', '$SqlOldData[forename]', '$SqlOldData[longname]', '$SqlOldData[displayname]', '$SqlOldData[dids]', '$SqlOldData[last_update]', '$SqlOldData[hash]', 'REMOVED')";
+        		if (!mysqli_query($this->connection, $sqlq_Insert_Teacher_History)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Insert_Teacher_History, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Remove_Teacher = "DELETE FROM $prefixTeachers WHERE id=$id";
+        		if (!mysqli_query($this->connection, $sqlq_Remove_Teacher)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Remove_Teacher, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+          }
+        }
+      }
+      return array("status"=>"success", "changes"=>array(
+        "old"=>$oldIDs,
+        "inserted"=>$insertedIDs,
+        "changed"=>$changedIDs,
+        "removed"=>$removedIDs
+      ));
+    }
+    public function getTeachersSQL(){
+      $prefixTeachers = $this->ini_array['msql_prefix']."Teachers";
+      $prefixTeachersHis = $this->ini_array['msql_prefix']."Teachers_his";
+
+      $sqlq_Get = "SELECT * from $prefixTeachers ORDER BY name";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      $Teachers = array();
+      if (mysqli_num_rows($sql_Get) > 0) {
+        while($row = mysqli_fetch_assoc($sql_Get)) {
+          $sqlq_GetHistory = "SELECT * from $prefixTeachersHis WHERE itm_id=$row[id]";
+          $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+          $row['history'] = array();
+          if (mysqli_num_rows($sql_GetHistory) > 0) {
+            while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+              array_push($row['history'], $rowHistory);
+            }
+          }
+          $Teachers[$row['id']] = $row;
+        }
+      }
+      return $Teachers;
+    }
+    public function getSingleTeacher($id){
+      $prefixTeachers = $this->ini_array['msql_prefix']."Teachers";
+      $prefixTeachersHis = $this->ini_array['msql_prefix']."Teachers_his";
+
+      $sqlq_Get = "SELECT * from $prefixTeachers WHERE id=$id";
+      $sql_Get = mysqli_query($this->connection, $sqlq_Get);
+      if (mysqli_num_rows($sql_Get) > 0) {
+        $row = mysqli_fetch_assoc($sql_Get);
+        $sqlq_GetHistory = "SELECT * from $prefixTeachersHis WHERE itm_id=$id";
+        $sql_GetHistory = mysqli_query($this->connection, $sqlq_GetHistory);
+        $row['history'] = array();
+        if (mysqli_num_rows($sql_GetHistory) > 0) {
+          while($rowHistory = mysqli_fetch_assoc($sql_GetHistory)) {
+            array_push($row['history'], $rowHistory);
+          }
+        }
+        return $row;
+      }
+      return null;
+    }
+
     public function insertSubjects($data){
       $prefixSubjects = $this->ini_array['msql_prefix']."Subjects";
       $prefixSubjectsHis = $this->ini_array['msql_prefix']."Subjects_his";
@@ -473,6 +631,120 @@
         return $row;
       }
       return null;
+    }
+
+    public function insertRooms($data){
+      $prefixRooms = $this->ini_array['msql_prefix']."Rooms";
+      $prefixRoomsHis = $this->ini_array['msql_prefix']."Rooms_his";
+
+      $sqlq_ids = "SELECT id from $prefixRooms";
+      $sql_ids = mysqli_query($this->connection, $sqlq_ids);
+      $oldIDs = array();
+      if (mysqli_num_rows($sql_ids) > 0) {
+        while($row = mysqli_fetch_assoc($sql_ids)) {
+          array_push($oldIDs, $row['id']);
+        }
+      }
+
+      $insertedIDs = array();
+      $changedIDs = array();
+      $newIDs = array();
+      foreach ($data as $RoomObject) {
+        $id = $RoomObject['id'];
+        $name = mysqli_real_escape_string($this->connection, $RoomObject['name']);
+        $longName = mysqli_real_escape_string($this->connection, $RoomObject['longName']);
+        $displayname = mysqli_real_escape_string($this->connection, $RoomObject['displayname']);
+        $building_id = $RoomObject['buildingId'];
+        $capacity = $RoomObject['capacity'];
+
+        unset($RoomObject['type']);
+        unset($RoomObject['externKey']);
+        unset($RoomObject['klasseId']);
+        unset($RoomObject['klasseOrStudentgroupId']);
+        unset($RoomObject['title']);
+        unset($RoomObject['alternatename']);
+        unset($RoomObject['classteacher']);
+        unset($RoomObject['classteacher2']);
+        unset($RoomObject['restypeId']);
+        unset($RoomObject['can']);
+
+        $hash = md5(json_encode($RoomObject, true));
+
+        array_push($newIDs, $id);
+
+        $sqlq_check = "SELECT * from $prefixRooms WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+        if(mysqli_num_rows($sql_check) == 0){
+          // ------------------------------------------- Insert Database --------------------------------------------- //
+          $sqlq_Insert_Room = "INSERT INTO $prefixRooms (id, name, longname, displayname, building_id, capacity, last_update, hash)
+          VALUES ($id, '$name', '$longName', '$displayname', $building_id, $capacity, NOW(), '$hash')";
+          array_push($insertedIDs, $id);
+          if (!mysqli_query($this->connection, $sqlq_Insert_Room)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Room, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+          $sqlq_Insert_Room_History = "INSERT INTO $prefixRoomsHis (itm_id, name, longname, displayname, building_id, capacity, last_update, hash, status)
+          VALUES ($id, '$name', '$longName', '$displayname', $building_id, $capacity, NOW(), '$hash', 'INSERT')";
+          if (!mysqli_query($this->connection, $sqlq_Insert_Room_History)) {
+            return array("status"=>"failed", "query"=>$sqlq_Insert_Room_History, "error"=>"SQL error: ".mysqli_connect_error());
+          }
+        } else {
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['building_id'] = $SqlOldData['building_id'];
+            $SqlOldData['capacity'] = $SqlOldData['capacity'];
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Room_History = "INSERT INTO $prefixRoomsHis (itm_id, name, longname, displayname, building_id, capacity, last_update, hash, status)
+            VALUES ($SqlOldData[id], '$SqlOldData[name]', '$SqlOldData[longname]', '$SqlOldData[displayname]', $SqlOldData[building_id], $SqlOldData[capacity], '$SqlOldData[last_update]', '$SqlOldData[hash]', 'UPDATE')";
+            if (!mysqli_query($this->connection, $sqlq_Insert_Room_History)) {
+              return array("status"=>"failed", "query"=>$sqlq_Insert_Room_History, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Update_Room = "UPDATE $prefixRooms SET name='$name', longname='$longName', displayname='$displayname', building_id=$building_id, capacity=$capacity, last_update=NOW(), hash='$hash' WHERE id=$id";
+            if (!mysqli_query($this->connection, $sqlq_Update_Room)) {
+              return array("status"=>"failed", "query"=>$sqlq_Update_Room, "error"=>"SQL error: ".mysqli_connect_error());
+            }
+          }
+        }
+      }
+      $removedIDs = array_values(array_diff($oldIDs, $newIDs));
+      foreach($removedIDs as $id) {
+        $sqlq_check = "SELECT * from $prefixRooms WHERE (id = $id) LIMIT 1";
+        $sql_check = mysqli_query($this->connection, $sqlq_check);
+    		if(mysqli_num_rows($sql_check) > 0){
+          $SqlOldData = mysqli_fetch_array($sql_check, MYSQLI_ASSOC);
+          $SqlHash = $SqlOldData['hash'];
+          if($SqlHash!=$hash){
+            $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
+            $SqlOldData['building_id'] = $SqlOldData['building_id'];
+            $SqlOldData['capacity'] = $SqlOldData['capacity'];
+            // ----------------------------------------- Insert into history ----------------------------------------- //
+            array_push($changedIDs, $id);
+            $sqlq_Insert_Room_History = "INSERT INTO $prefixRoomsHis (itm_id, name, longname, displayname, building_id, capacity, last_update, hash, status)
+        		VALUES ($SqlOldData[id], '$SqlOldData[name]', '$SqlOldData[longname]', '$SqlOldData[displayname]', $SqlOldData[building_id], $SqlOldData[capacity], '$SqlOldData[last_update]', '$SqlOldData[hash]', 'REMOVED')";
+        		if (!mysqli_query($this->connection, $sqlq_Insert_Room_History)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Insert_Room_History, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+            // ----------------------------------------- Update Database --------------------------------------------- //
+            $sqlq_Remove_Room = "DELETE FROM $prefixRooms WHERE id=$id";
+        		if (!mysqli_query($this->connection, $sqlq_Remove_Room)) {
+        			return array("status"=>"failed", "query"=>$sqlq_Remove_Room, "error"=>"SQL error: ".mysqli_connect_error());
+        		}
+          }
+        }
+      }
+      return array("status"=>"success", "changes"=>array(
+        "old"=>$oldIDs,
+        "inserted"=>$insertedIDs,
+        "changed"=>$changedIDs,
+        "removed"=>$removedIDs
+      ));
     }
 
     public function insertPeriods($data){
