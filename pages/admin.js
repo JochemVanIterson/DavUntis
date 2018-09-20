@@ -633,13 +633,8 @@ function AdminPage(parent){
       <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
     view.find('#UpdateDbButton').click(function(){
-      $.post('scripts/actions.php',{
-        action: 'updateDB',
-      },
-      function(data, status){
-        data = JSON.parse(data);
-        console.log('updateDB', data);
-      });
+      types = ['init', 'schoolclasses', 'teachers', 'subjects', 'rooms', 'periods'];
+      updateDataBase(types, null);
     });
     return view;
   }
@@ -675,7 +670,7 @@ function AdminPage(parent){
   }
 
   // ----------------------------------- Helpers ------------------------------------------------ //
-  var saveFile = (function () {
+  var saveFile = function () {
     var a = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
@@ -687,5 +682,23 @@ function AdminPage(parent){
       a.click();
       window.URL.revokeObjectURL(url);
     };
-  }());
+  }();
+  var updateDataBase = function(typesArray, sessiondata){
+    options = {
+      action: 'updateDB',
+      type: typesArray[0],
+      sessiondata: sessiondata
+    }
+    console.log('updateDB options', options);
+    $.post('scripts/actions.php', options,
+    function(data, status){
+      data = JSON.parse(data);
+      if(typesArray[0]=='init')sessiondata = data.sessionData;
+      console.log('updateDB', typesArray[0], data);
+      typesArray.shift();
+      if(typesArray.length>0){
+        updateDataBase(typesArray, sessiondata);
+      }
+    });
+  }
 }
