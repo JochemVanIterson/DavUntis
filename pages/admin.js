@@ -633,7 +633,7 @@ function AdminPage(parent){
       <button id='UpdateDbButton' class='button'>Update DB</button>
     </div>`);
     view.find('#UpdateDbButton').click(function(){
-      types = ['init', 'schoolclasses', 'teachers', 'subjects', 'rooms', 'periods'];
+      types = ['init', 'departments', 'schoolclasses', 'teachers', 'subjects', 'rooms', 'periods'];
       updateDataBase(types, null);
     });
     return view;
@@ -689,11 +689,14 @@ function AdminPage(parent){
       type: typesArray[0],
       sessiondata: sessiondata
     }
-    console.log('updateDB options', options);
+    console.log(typesArray[0]);
     $.post('scripts/actions.php', options,
     function(data, status){
       data = JSON.parse(data);
       if(typesArray[0]=='init')sessiondata = data.sessionData;
+      if(typesArray[0]=='periods'){
+
+      }
       console.log('updateDB', typesArray[0], data);
       typesArray.shift();
       if(typesArray.length>0){

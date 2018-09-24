@@ -168,6 +168,12 @@
 
     $sessionData = $_POST['sessiondata'];
     $UntisData = new UntisData($UntisURL, $sessionData, $ini_array);
+
+    if($_POST['type']=='departments'){
+      $ServerDepartments = $UntisData->Departments();
+      $responseArray['departments'] = $UntisRetreiver->insertDepartments($ServerDepartments);
+    }
+
     // -------------------- Exclude unused department data from collection -------------------- //
     $responseArray['jDS_response'] = $UntisData->jsonDepartmentService($UntisRetreiver, $SQL);
 

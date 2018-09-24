@@ -41,9 +41,6 @@ class UntisData{
 	}
 
   function jsonDepartmentService($UntisRetreiver, $SQL){
-    $ServerDepartments = $this->Departments();
-    $responseArray['departments'] = $UntisRetreiver->insertDepartments($ServerDepartments);
-
     $allowed_departments = array();
     $dis_departments = json_decode($SQL->getSetting('dis_departments'));
     $departments = $UntisRetreiver->getDepartmentsSQL();
