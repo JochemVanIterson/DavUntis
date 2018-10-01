@@ -2,11 +2,15 @@
     --Primary:#ff6e40;
     --PrimaryDark:#c53d13;
     --PrimaryLight:#ffa06d;
+
     --Accent:#304ffe;
     --AccentDark:#0026ca;
     --AccentLight:#7a7cff;
-    --AccentCustom:#a7c0cd;
-    --AccentDarkCustom:#29434e;
+
+    --AccentCustom:#90a4ae;
+    --AccentDarkCustom:#62757f;
+    --AccentLightCustom:#c1d5e0;
+    
     --Background:#EEEEEE;
     --ContentBGColor:#FFFFFF;
 }

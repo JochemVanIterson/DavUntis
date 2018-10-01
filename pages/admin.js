@@ -630,12 +630,25 @@ function AdminPage(parent){
           </li>
           <li>Info about data</li>
         </ul><br>
-      <button id='UpdateDbButton' class='button'>Update DB</button>
+      <div id='update_db_buttons'>
+        <button id='update_all_button' class='update_db_button button'>Update All</button>
+        <button id='update_departments_button' class='update_db_button button'>Update Departments</button>
+        <button id='update_schoolclasses_button' class='update_db_button button'>Update Schoolclasses</button>
+        <button id='update_teachers_button' class='update_db_button button'>Update Teachers</button>
+        <button id='update_subjects_button' class='update_db_button button'>Update Subjects</button>
+        <button id='update_rooms_button' class='update_db_button button'>Update Rooms</button>
+        <button id='update_periods_button' class='update_db_button button'>Update Periods</button>
+      </div>
     </div>`);
-    view.find('#UpdateDbButton').click(function(){
-      types = ['init', 'departments', 'schoolclasses', 'teachers', 'subjects', 'rooms', 'periods'];
-      updateDataBase(types, null);
+    view.find('#update_all_button').click(function(){
+      updateDataBase(['init', 'departments', 'schoolclasses', 'teachers', 'subjects', 'rooms', 'periods'], null);
     });
+    view.find('#update_departments_button').click(function(){updateDataBase(['init', 'departments'], null)});
+    view.find('#update_schoolclasses_button').click(function(){updateDataBase(['init', 'schoolclasses'], null)});
+    view.find('#update_teachers_button').click(function(){updateDataBase(['init', 'teachers'], null)});
+    view.find('#update_subjects_button').click(function(){updateDataBase(['init', 'subjects'], null)});
+    view.find('#update_rooms_button').click(function(){updateDataBase(['init', 'rooms'], null)});
+    view.find('#update_periods_button').click(function(){updateDataBase(['init', 'periods'], null)});
     return view;
   }
   self.pageSystem = function(){ // ------------------------------------------------ Page System ------------------------------------------------- //

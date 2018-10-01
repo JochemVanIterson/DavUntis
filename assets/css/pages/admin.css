@@ -370,6 +370,22 @@
 	width: 100%;
 }
 
+/* ---------------------------------------- Admin Database ----------------------------------------- */
+.update_db_button{
+	background: var(--AccentCustom);
+}
+.update_db_button:hover{
+	background: var(--AccentLightCustom);
+}
+.update_db_button:active{
+	background: var(--AccentDarkCustom);
+}
+
+.update_db_button.working{
+	background: var(--Accent);
+}
+
+
 /* ---------------------------------------- Smaller Screens ---------------------------------------- */
 @media only screen and (max-width: 1200px){
 	.selector_text {
