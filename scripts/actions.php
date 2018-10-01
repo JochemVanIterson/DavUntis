@@ -193,6 +193,8 @@
       $sync_history = intval(str_replace('week ', '', $SQL->getSetting('untis_sync_before')))*-1;
       $sync_future = intval(str_replace('week ', '', $SQL->getSetting('untis_sync_after')));
 
+      $sync_history_date = date('Y-m-d', strtotime($sync_history." week"));
+
       $schoolclass_ids = $UntisRetreiver->getSchoolClassIDsSQL();
 
       $dates = array();
@@ -205,7 +207,7 @@
         array_push($dates, $date);
       }
       $responseArray['dates'] = $dates;
-      $responseArray['periods'] = $UntisRetreiver->insertPeriods($ServerPeriods);
+      $responseArray['periods'] = $UntisRetreiver->insertPeriods($ServerPeriods, $sync_history_date);
     }
     die(json_encode($responseArray));
   }

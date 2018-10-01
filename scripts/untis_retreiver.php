@@ -382,7 +382,7 @@
           if($SqlHash!=$hash){
             $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
             $SqlOldData['forename'] = mysqli_real_escape_string($this->connection, $SqlOldData['forename']);
-            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longname']);
             $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
             $SqlOldData['dids'] = mysqli_real_escape_string($this->connection, $SqlOldData['dids']);
             // ----------------------------------------- Insert into history ----------------------------------------- //
@@ -692,7 +692,7 @@
           $SqlHash = $SqlOldData['hash'];
           if($SqlHash!=$hash){
             $SqlOldData['name'] = mysqli_real_escape_string($this->connection, $SqlOldData['name']);
-            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longName']);
+            $SqlOldData['longname'] = mysqli_real_escape_string($this->connection, $SqlOldData['longname']);
             $SqlOldData['displayname'] = mysqli_real_escape_string($this->connection, $SqlOldData['displayname']);
             $SqlOldData['building_id'] = $SqlOldData['building_id'];
             $SqlOldData['capacity'] = $SqlOldData['capacity'];
@@ -747,11 +747,13 @@
       ));
     }
 
-    public function insertPeriods($data){
+    public function insertPeriods($data, $sync_history){
       $prefixPeriods = $this->ini_array['msql_prefix']."Periods";
       $prefixPeriodsHis = $this->ini_array['msql_prefix']."Periods_his";
 
-      $sqlq_ids = "SELECT id from $prefixPeriods";
+      $sync_historyStr = $sync_history." 00:00:00";// date_format($sync_history, 'Y-m-d')." 00:00:00";
+
+      $sqlq_ids = "SELECT id from $prefixPeriods WHERE (date >= '$sync_historyStr')";
       $sql_ids = mysqli_query($this->connection, $sqlq_ids);
       $oldIDs = array();
       if (mysqli_num_rows($sql_ids) > 0) {
@@ -820,7 +822,7 @@
 
         array_push($newIDs, $id);
 
-        $sqlq_check = "SELECT * from $prefixPeriods WHERE (id = $id) LIMIT 1";
+        $sqlq_check = "SELECT * from $prefixPeriods WHERE (id = $id) and (date >= '$sync_historyStr') LIMIT 1";
         $sql_check = mysqli_query($this->connection, $sqlq_check);
         if(mysqli_num_rows($sql_check) == 0){
           // ------------------------------------------- Insert Database --------------------------------------------- //
